@@ -10,3 +10,7 @@ xcuserdata/
 .DS_Store
 tools/__pycache__/
 .tools/
+DeviceExport/
+*.p12
+*.mobileprovision
+*.ipa

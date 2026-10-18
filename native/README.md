@@ -31,10 +31,12 @@ The Expo `lifeplanner.db` has a different schema. Native backup import does **no
 ## Documentation
 
 - [Migration decisions and parity](docs/MIGRATION.md)
+- [Source-derived functional audit](docs/PARITY-AUDIT.md)
 - [Validation and device checklist](docs/VALIDATION.md)
 - [Data science research/integration plan](docs/DATA-SCIENCE-PLAN.md)
 - [Dissertation evidence and outline](docs/DISSERTATION-NOTES.md)
 - [Development record](docs/DEVELOPMENT-LOG.md)
+- [iPhone distribution without a personal Mac](docs/IPHONE-WITHOUT-MAC-RU.md)
 
 Apple Watch, HealthKit, WatchConnectivity, App Intents, CloudKit, trained prediction and externally sourced user data are not implemented. The iPhone and Mac apps currently have separate local stores. Neither application claims to improve behaviour or infer habit automaticity.
 

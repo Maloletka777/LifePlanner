@@ -4,6 +4,29 @@
 
 Для следующего этапа можно подготовить подписанную сборку на облачном Mac и передать её через TestFlight. Apple требует членство команды в Apple Developer Program для такой доставки. Сначала нужно выяснить, есть ли уже действующая команда владельца или доступ к университетской команде; покупать подписку заранее не требуется.
 
+В старом `eas.json` уже указан App Store Connect app ID `6793826774`, а старый bundle ID — `com.olegkotikov.lifeplanner.alpha`. Это свидетельство прежней настройки доставки, но не подтверждение действующего членства или доступа. Нативный кандидат использует другой идентификатор; подменять старую запись или её сборку без отдельного решения не следует.
+
+Владелец подтвердил, что доступ к Apple Developer / App Store Connect сохранился. Статус членства, доступные сертификаты и профили в аккаунте пока не проверены.
+
+## Подготовленная ручная сборка
+
+В ветке подготовлен workflow `.github/workflows/native-iphone-archive.yml` и помощник `native/tools/archive_iphone.py`. Он запускается только вручную, собирает подписанный архив на облачном Mac и сохраняет IPA на семь дней. Он не загружает приложение в Apple и не запускается на pull request. Профиль проверяется на точное соответствие идентификатору кандидата, команде, сроку действия и способу экспорта. Временный сертификат/профиль очищаются; ключи не входят в артефакт.
+
+В GitHub Settings → Secrets and variables → Actions потребуются четыре repository secrets:
+
+| Имя | Значение |
+|---|---|
+| `IOS_CERTIFICATE_BASE64` | Однострочный Base64 Apple Distribution сертификата с закрытым ключом в P12 |
+| `IOS_CERTIFICATE_PASSWORD` | Пароль этого P12 |
+| `IOS_PROFILE_BASE64` | Однострочный Base64 профиля для `com.olegkotikov.liveplanner.swift.dev` |
+| `APPLE_TEAM_ID` | Идентификатор команды Apple Developer |
+
+Для `app-store-connect` нужен App Store distribution profile; для `release-testing` — Ad Hoc profile с зарегистрированным iPhone. IPA первого типа нельзя просто открыть на телефоне: потребуется отдельная загрузка в App Store Connect и TestFlight. Экспорт Ad Hoc рассчитан только на устройства из профиля.
+
+Не отправлять секреты в чат. Если сохранились материалы подписи Expo/EAS, сначала проверить их применимость: профиль старого bundle ID не подходит новому кандидату. Создание новых ключей и профилей можно организовать с Windows; собственный Mac для хранения исходников не требуется.
+
+Python-помощник прошёл проверку синтаксиса и безопасного отказа при отсутствии секретов. Сам workflow, подписанная сборка и экспорт ещё не выполнялись. Полная проверка требований App Store Connect (включая иконку приложения, метаданные, актуальный SDK и обработку загрузки) остаётся отдельным этапом. Для ручного запуска workflow должен сначала появиться в основной ветке репозитория. Сейчас он подготовлен в черновике PR; основная ветка не изменена. После принятия workflow можно выбрать нужную ветку сборки. Он пока не считается проверенной рабочей доставкой.
+
 Порядок подготовки:
 
 1. Завершить автоматические проверки текущего исходного кода.
@@ -19,3 +42,6 @@
 - [Welcome to app distribution](https://developer.apple.com/tutorials/develop-in-swift/welcome-to-app-distribution)
 - [Distributing your Xcode Cloud builds through TestFlight](https://developer.apple.com/documentation/xcode/distributing-your-xcode-cloud-builds-through-testflight)
 - [TestFlight](https://developer.apple.com/testflight/)
+- [GitHub: установка Apple-сертификата на macOS runner](https://docs.github.com/en/actions/how-tos/deploy/deploy-to-third-party-platforms/sign-xcode-applications)
+
+- [GitHub: условие ручного запуска workflow](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
