@@ -34,6 +34,7 @@ public struct CalendarDay: Hashable, Comparable, Codable, Sendable, CustomString
             throw PlannerError.invalid("Expected YYYY-MM-DD")
         }
         try self.init(y, m, d)
+        guard description == text else { throw PlannerError.invalid("Expected canonical YYYY-MM-DD") }
     }
     public init(date: Date, timezone: TimeZone = .current) {
         var c = Self.calendar; c.timeZone = timezone

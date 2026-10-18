@@ -30,9 +30,9 @@ extension PlannerSnapshot {
         let parentLinks = relationships.filter { $0.childID == habitID && $0.effective.contains(day) }
         // Dependent/routine children inherit the parent's occurrence; ordinary subhabits keep their own schedule.
         var occurrence = try config.schedule.occurrence(on: day)
-        if let inherited = parentLinks.first(where: { $0.kind != .subhabit }),
-           let parent = habits.first(where: { $0.id == inherited.parentID }),
-           let parentConfig = parent.configuration(on: day), !parent.isArchived(on: day) {
+        if let inherited = parentLinks.first(where: { $0.kind != .subhabit }) {
+            guard let parent = habits.first(where: { $0.id == inherited.parentID }),
+                  let parentConfig = parent.configuration(on: day), !parent.isArchived(on: day) else { return HabitStatus(.notScheduled) }
             occurrence = try parentConfig.schedule.occurrence(on: day)
         }
         guard let occurrence else { return HabitStatus(.notScheduled) }

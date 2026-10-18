@@ -28,7 +28,7 @@ struct HabitDetail: View {
                         Label(config.name, systemImage: config.symbol).font(.title2)
                         if !config.detail.isEmpty { Text(config.detail) }
                         LabeledContent("Schedule", value: config.schedule.kind.label)
-                        LabeledContent("State", value: state.outcome.rawValue.capitalized)
+                        LabeledContent("State") { Text(state.outcome.rawValue.capitalized).accessibilityIdentifier("habit.outcome") }
                         if let actual = state.actual { LabeledContent("Recorded", value: "\(actual) / \(config.tracking.target) \(config.tracking.unit)") }
                         if let target = state.periodTarget { LabeledContent("This period", value: "\(state.periodSuccesses) / \(target)") }
                     }

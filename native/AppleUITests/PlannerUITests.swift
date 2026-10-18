@@ -10,8 +10,15 @@ final class PlannerUITests: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.staticTexts["UI smoke habit"].waitForExistence(timeout: 5))
         app.staticTexts["UI smoke habit"].firstMatch.tap()
-        XCTAssertTrue(app.buttons["Success"].waitForExistence(timeout: 5)); app.buttons["Success"].tap()
-        XCTAssertTrue(app.staticTexts["Success"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Success"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["habit.outcome"].label, "Missing")
+        app.buttons["Success"].tap()
+        XCTAssertEqual(app.staticTexts["habit.outcome"].label, "Success")
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.staticTexts["UI smoke habit"].waitForExistence(timeout: 15))
+        app.staticTexts["UI smoke habit"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["habit.outcome"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["habit.outcome"].label, "Success")
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.name = "Habit recorded"; attachment.lifetime = .keepAlways; add(attachment)
     }
     @MainActor func testCreateTaskPersistsAcrossLaunch() throws {

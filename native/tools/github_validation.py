@@ -5,13 +5,20 @@ from pathlib import Path
 import urllib.request, json, subprocess, sys
 root = Path(__file__).resolve().parents[1]
 repo = 'Maloletka777/LifePlanner'
+class SafeRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        redirected = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if redirected is not None:
+            redirected.remove_header('Authorization')
+        return redirected
+opener = urllib.request.build_opener(SafeRedirect())
 def request(path, authenticated=False):
     headers={'Accept':'application/vnd.github+json','User-Agent':'LivePlanner-validation'}
     if authenticated:
         result=subprocess.run(['git','credential','fill'],input='protocol=https\nhost=github.com\n\n',text=True,capture_output=True,check=True)
         credentials=dict(line.split('=',1) for line in result.stdout.splitlines() if '=' in line)
         headers['Authorization']='Bearer '+credentials['password']
-    return urllib.request.urlopen(urllib.request.Request('https://api.github.com/repos/'+repo+path,headers=headers))
+    return opener.open(urllib.request.Request('https://api.github.com/repos/'+repo+path,headers=headers))
 runs=json.load(request('/actions/runs?branch=swift-migration&per_page=1'))['workflow_runs']
 if not runs: raise SystemExit('No validation runs yet')
 run=runs[0]

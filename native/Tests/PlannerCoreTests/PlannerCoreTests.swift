@@ -178,4 +178,29 @@ final class PlannerCoreTests: XCTestCase {
         s.reminders = []; s.formatVersion = 2; XCTAssertThrowsError(try s.validate())
         XCTAssertNotEqual(id, UUID())
     }
+    func testArchivedParentRemovesInheritedOccurrence() throws {
+        var (s,parent) = try makeHabit(); let child = try s.createHabit(HabitConfiguration(name: "Dependent", from: day))
+        try s.addRelationship(Relationship(parentID: parent, childID: child, kind: .followUp, from: day))
+        try s.setArchived(parent, archived: true, from: day)
+        XCTAssertEqual(try s.status(habitID: child, on: day).outcome, .notScheduled)
+    }
+    func testWeightedProgressUsesHistoricalImportance() throws {
+        var (s,first) = try makeHabit()
+        s.habits[0].configurations[0].importance = .critical
+        _ = try s.createHabit(HabitConfiguration(name: "Second", from: day))
+        try s.record(habitID: first, on: day, value: .boolean(true), boundary: day)
+        XCTAssertEqual(try s.progress(on: day, boundary: day), Decimal(string: "0.5"))
+        s.weightedProgress = true
+        let weighted = try XCTUnwrap(s.progress(on: day, boundary: day))
+        XCTAssertEqual(NSDecimalNumber(decimal: weighted).doubleValue, 2.0/3.0, accuracy: 1e-12)
+    }
+    func testAtMostNeedsExplicitReportIncludingZero() throws {
+        var (s,id) = try makeHabit(mode: .counter, target: 3)
+        s.habits[0].configurations[0].tracking.comparison = .atMost
+        XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .missing)
+        try s.record(habitID: id, on: day, value: .amount(0), boundary: day)
+        XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .success)
+        try s.record(habitID: id, on: day, value: .amount(4), boundary: day)
+        XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .unsuccessful)
+    }
 }
