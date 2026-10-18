@@ -13,6 +13,9 @@
 - Added two simulator UI behaviour tests, Xcode iPhone/iPad and Mac targets, and a macOS GitHub Actions workflow. Evidence must identify the run/commit; passing shared-core tests alone is insufficient.
 - First Apple run: shared-core/storage tests passed; iOS build exposed non-Sendable Apple notification API results under Swift 6. Replaced object transfer with callback-to-value continuations.
 - Second Apple run: shared tests and iOS simulator build passed; Mac build exposed mismatched active architecture between the application and local package. Matched Debug builds to their active destination and reran.
+- Third Apple run (`182b52a`): 35 package tests, iOS and macOS builds and both iPhone simulator UI tests passed. Strengthened the habit UI test to assert the actual outcome value and verify it after relaunch; added three more domain cases, bringing the latest local total to 38. Later build results are recorded separately.
+- The stricter UI test exposed a test-expectation mismatch: the accessible field was `State, Success`, not just `Success`. Logs confirmed the correct persisted state; corrected the expected full label in `98d02e2` and reran. Retained and visually inspected the real iPhone 16 Pro screenshot from `95d0bd7`. No passing result was inferred from the failed test run.
+- Final Apple run `39131749481` on `98d02e2` passed: 38 package tests, both application builds and both strengthened iPhone UI tests. Retained the compact log and final workflow artefact. Only documentation/evidence/package contents were updated afterwards; no extra testing was repeated without a source change.
 - Prepared a research plan and CN6000 evidence notebook. No training, evaluations on external datasets or causal intervention claims were made.
 
 Further Apple validation and any resulting fixes are recorded in `VALIDATION.md` and the branch history.

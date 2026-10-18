@@ -3,14 +3,14 @@ import zipfile, hashlib, json
 root=Path(__file__).resolve().parents[1]
 destination=root.parent/'LivePlanner-Swift-Review.zip'
 entries=[]
-parts=['Package.swift','.gitignore','README.md','START-HERE-RU.md','AppleApp','AppleUITests','Sources','Tests','Vendor','LivePlanner.xcodeproj','docs']
+parts=['Package.swift','.gitignore','README.md','START-HERE-RU.md','AppleApp','AppleUITests','Sources','Tests','Vendor','LivePlanner.xcodeproj','docs','tools']
 with zipfile.ZipFile(destination,'w',zipfile.ZIP_DEFLATED) as archive:
     for part in parts:
         source=root/part
         if not source.exists(): continue
         files=sorted(source.rglob('*')) if source.is_dir() else [source]
         for file in files:
-            if not file.is_file(): continue
+            if not file.is_file() or '__pycache__' in file.parts or file.name in ('backup.py','sync_review.py'): continue
             relative=file.relative_to(root).as_posix()
             data=file.read_bytes(); archive.writestr('LivePlanner-Swift/'+relative,data)
             entries.append({'path':relative,'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data)})
