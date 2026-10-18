@@ -31,7 +31,14 @@ struct TodayView: View {
                         let entry = model.snapshot.journal.first { $0.day == day }
                         if let focus = entry?.focus, !focus.isEmpty { Text(focus).font(.headline) }
                         Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
+                        NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
                     }.padding(.vertical, 8)
+                }
+                let focusCards = model.snapshot.focusEntries.filter { $0.isVisible(on: day) }
+                if !focusCards.isEmpty {
+                    Section("Daily Focus") {
+                        ForEach(focusCards) { focus in NavigationLink(focus.title) { FocusDetail(focusID: focus.id) } }
+                    }
                 }
                 ForEach(DayBlock.allCases, id: \.self) { block in
                     let habits = model.snapshot.habits.filter {

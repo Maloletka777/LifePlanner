@@ -20,6 +20,7 @@ struct HabitEditor: View {
     var body: some View {
         NavigationStack {
             Form {
+                InlinePlannerError()
                 Section("Identity") {
                     TextField("Habit title", text: $config.name)
                     TextField("Description", text: $config.detail, axis: .vertical)

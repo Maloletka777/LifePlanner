@@ -78,6 +78,7 @@ public struct Habit: Identifiable, Codable, Equatable, Sendable {
 public enum ObservationValue: Codable, Equatable, Sendable {
     case boolean(Bool), amount(Decimal), skipped, void
 }
+public enum CorrectionReason: String, Codable, CaseIterable, Sendable { case correctValue, correctDate, duplicateEntry, reversal, other }
 public struct Observation: Identifiable, Codable, Equatable, Sendable {
     public var id = UUID()
     public var habitID: UUID
@@ -87,11 +88,21 @@ public struct Observation: Identifiable, Codable, Equatable, Sendable {
     public var timezone: String
     public var supersedes: UUID?
     public var note: String
+    public var occurrenceMinute: Int?
+    public var correctionReason: CorrectionReason?
+    /// Immutable context allows history to remain interpretable after a relationship
+    /// ends or a configuration is subsequently edited.
+    public var contextConfiguration: HabitConfiguration?
+    public var contextRelationship: Relationship?
     public var recordedAt: Date = Date()
     public init(habitID: UUID, configurationID: UUID, day: CalendarDay, value: ObservationValue,
-                timezone: String, supersedes: UUID? = nil, note: String = "") {
+                timezone: String, supersedes: UUID? = nil, note: String = "", occurrenceMinute: Int? = nil,
+                correctionReason: CorrectionReason? = nil, contextConfiguration: HabitConfiguration? = nil,
+                contextRelationship: Relationship? = nil) {
         self.habitID = habitID; self.configurationID = configurationID; self.day = day; self.value = value
         self.timezone = timezone; self.supersedes = supersedes; self.note = note
+        self.occurrenceMinute = occurrenceMinute; self.correctionReason = correctionReason
+        self.contextConfiguration = contextConfiguration; self.contextRelationship = contextRelationship
     }
 }
 public enum RelationshipKind: String, Codable, CaseIterable, Sendable { case subhabit, prerequisite, followUp, routineStep }
@@ -167,6 +178,11 @@ public struct PlannerSnapshot: Codable, Equatable, Sendable {
     public var checklist: [ChecklistItem] = []
     public var tasks: [PlannerTask] = []
     public var journal: [JournalEntry] = []
+    public var dailyFocus: [DailyFocus]?
+    public var focusEntries: [DailyFocus] {
+        get { dailyFocus ?? [] }
+        set { dailyFocus = newValue }
+    }
     public var attempts: [GrowthAttempt] = []
     public var reminders: [Reminder] = []
     public var weightedProgress = false

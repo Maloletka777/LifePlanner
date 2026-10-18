@@ -7,6 +7,8 @@ struct GrowthView: View {
     @State private var selectedID: UUID?
     @State private var cue = ""
     @State private var enjoyment = ""
+    @State private var editingAttemptID: UUID?
+    @State private var reviewingHabitID: UUID?
     var body: some View {
         NavigationStack {
             List {
@@ -32,20 +34,43 @@ struct GrowthView: View {
                                         Text(awards.map { "\($0.axis) \($0.milestone)" }.joined(separator: " · ")).font(.caption).foregroundStyle(Palette.sage)
                                     }
                                 }
+                                Button("Edit growth details") {
+                                    editingAttemptID = attempt.id; selectedID = habit.id; cue = attempt.cue; enjoyment = attempt.enjoyment
+                                }.buttonStyle(.borderless)
+                                if attempt.endExclusive == nil {
+                                    Button("Stop tracking from today") { model.change { try $0.stopGrowth(attempt.id, from: .today) } }.buttonStyle(.borderless)
+                                }
                             }
                         }
-                        Button(attempts.isEmpty ? "Start an attempt" : "Start a new attempt") { selectedID = habit.id; cue = ""; enjoyment = "" }
+                        if let diagnosis = (try? model.snapshot.diagnoses(habitID: habit.id))?.first {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("A pattern to review").font(.headline)
+                                Text(diagnosis.message)
+                                Text("Based on recorded outcomes over 28 completed days. Missing reports do not prove non-performance. This is a fixed-rule suggestion.").font(.caption).foregroundStyle(.secondary)
+                                Button("Review plan") { reviewingHabitID = habit.id }
+                            }
+                        }
+                        Button(attempts.isEmpty ? "Start an attempt" : "Start a new attempt") { editingAttemptID = nil; selectedID = habit.id; cue = ""; enjoyment = "" }
                     }
                 }
             }.navigationTitle("Growing")
+                .sheet(isPresented: Binding(get: { reviewingHabitID != nil }, set: { if !$0 { reviewingHabitID = nil } })) {
+                    if let reviewingHabitID { HabitEditor(day: .today, habitID: reviewingHabitID) }
+                }
                 .sheet(isPresented: Binding(get: { selectedID != nil }, set: { if !$0 { selectedID = nil } })) {
                     NavigationStack {
                         Form {
+                            InlinePlannerError()
                             TextField("What will remind you?", text: $cue, axis: .vertical)
-                            TextField("What makes it enjoyable?", text: $enjoyment, axis: .vertical)
-                            Button("Start today") {
+                            Picker("Do you enjoy it?", selection: $enjoyment) {
+                                Text("Not specified").tag(""); Text("Yes").tag("yes"); Text("I tolerate it").tag("tolerated"); Text("No").tag("no")
+                            }
+                            Button(editingAttemptID == nil ? "Start today" : "Save details") {
                                 guard let selectedID else { return }
-                                if model.change({ try $0.restartGrowth(habitID: selectedID, on: .today, cue: cue, enjoyment: enjoyment) }) { self.selectedID = nil }
+                                if model.change({ state in
+                                    if let editingAttemptID { try state.updateGrowth(editingAttemptID, cue: cue, enjoyment: enjoyment) }
+                                    else { try state.restartGrowth(habitID: selectedID, on: .today, cue: cue, enjoyment: enjoyment) }
+                                }) { self.selectedID = nil; editingAttemptID = nil }
                             }
                         }.navigationTitle("A new start").toolbar { Button("Cancel") { selectedID = nil } }
                     }.frame(minWidth: 300, minHeight: 300)

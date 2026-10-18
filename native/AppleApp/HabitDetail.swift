@@ -16,6 +16,11 @@ struct HabitDetail: View {
     @State private var correcting: UUID?
     @State private var correctionValue = ""
     @State private var correctionBoolean = false
+    @State private var correctionDate = Date()
+    @State private var correctionTime = Date()
+    @State private var correctionHasTime = false
+    @State private var occurrenceHasTime = false
+    @State private var occurrenceTime = Date()
     private var day: CalendarDay { CalendarDay(date: selectedDate) }
     private var habit: Habit? { model.snapshot.habits.first { $0.id == habitID } }
     var body: some View {
@@ -31,8 +36,9 @@ struct HabitDetail: View {
                         LabeledContent("State") { Text(state.outcome.rawValue.capitalized).accessibilityIdentifier("habit.outcome") }
                         if let actual = state.actual { LabeledContent("Recorded", value: "\(actual) / \(config.tracking.target) \(config.tracking.unit)") }
                         if let target = state.periodTarget { LabeledContent("This period", value: "\(state.periodSuccesses) / \(target)") }
+                        if state.isRoutineContainer { LabeledContent("Routine steps", value: "\(state.completedSteps) / \(state.applicableSteps)") }
                     }
-                    if day <= .today && state.outcome != .notScheduled && state.outcome != .blocked {
+                    if day <= .today && state.outcome != .notScheduled && state.outcome != .blocked && !state.isRoutineContainer && !config.closesByChecklist {
                         Section("Record performance") {
                             if config.tracking.mode == .checkbox || config.tracking.mode == .avoidance {
                                 HStack {
@@ -48,6 +54,8 @@ struct HabitDetail: View {
                                 }
                             }
                             TextField("Optional note", text: $note, axis: .vertical)
+                            Toggle("Add occurrence time", isOn: $occurrenceHasTime)
+                            if occurrenceHasTime { DatePicker("Actual time", selection: $occurrenceTime, displayedComponents: .hourAndMinute) }
                             Button("Skip this occurrence") { record(.skipped) }
                         }
                     }
@@ -56,14 +64,11 @@ struct HabitDetail: View {
                             Button {
                                 model.change { try $0.toggleChecklist(item.id, on: day) }
                             } label: { Label(item.text, systemImage: item.checkedDays.contains(day) ? "checkmark.square.fill" : "square") }
-                                .disabled(day > .today || state.outcome == .blocked || state.outcome == .notScheduled)
+                                .accessibilityLabel(item.text)
+                                .disabled(day > .today || state.outcome == .blocked || state.outcome == .notScheduled || state.isRoutineContainer)
                                 .contextMenu {
                                     Button("Remove from selected day", role: .destructive) {
-                                        model.change { s in
-                                            guard let i = s.checklist.firstIndex(where: { $0.id == item.id }) else { return }
-                                            if day == item.effective.start { s.checklist.remove(at: i) }
-                                            else { s.checklist[i].effective.endExclusive = day; s.checklist[i].checkedDays = s.checklist[i].checkedDays.filter { $0 < day } }
-                                        }
+                                        model.change { try $0.removeChecklistItem(item.id, from: day) }
                                     }
                                 }
                         }
@@ -82,15 +87,12 @@ struct HabitDetail: View {
                                 }
                                 Spacer()
                                 Button("Unlink") {
-                                    model.change { s in
-                                        guard let i = s.relationships.firstIndex(where: { $0.id == link.id }) else { return }
-                                        if day == link.effective.start { s.relationships.remove(at: i) }
-                                        else { s.relationships[i].effective.endExclusive = day }
-                                    }
+                                    model.change { try $0.unlinkRelationship(link.id, from: day) }
                                 }.buttonStyle(.borderless)
                             }
                         }
                         Button("Link a habit") { relationship = true }
+                        NavigationLink("Convert children to a routine") { RoutineConversionView(parentID: habitID, day: day) }
                     }
                     Section("Observation history") {
                         ForEach(model.snapshot.observations.filter { $0.habitID == habitID && $0.day == day }.reversed()) { fact in
@@ -103,6 +105,9 @@ struct HabitDetail: View {
                                     HStack {
                                         Button("Correct") {
                                             correcting = fact.id
+                                            correctionDate = fact.day.date(timezone: .current)
+                                            correctionHasTime = fact.occurrenceMinute != nil
+                                            correctionTime = timeDate(fact.occurrenceMinute ?? minuteOfDay(Date()))
                                             if case .amount(let n) = fact.value { correctionValue = NSDecimalNumber(decimal: n).stringValue }
                                             if case .boolean(let b) = fact.value { correctionBoolean = b }
                                         }
@@ -134,6 +139,10 @@ struct HabitDetail: View {
                 .sheet(isPresented: Binding(get: { correcting != nil }, set: { if !$0 { correcting = nil } })) {
                     NavigationStack {
                         Form {
+                            InlinePlannerError()
+                            DatePicker("Correct date", selection: $correctionDate, in: ...Date(), displayedComponents: .date)
+                            Toggle("Record occurrence time", isOn: $correctionHasTime)
+                            if correctionHasTime { DatePicker("Occurrence time", selection: $correctionTime, displayedComponents: .hourAndMinute) }
                             if config.tracking.mode == .checkbox || config.tracking.mode == .avoidance {
                                 Toggle("Successful", isOn: $correctionBoolean)
                             } else { TextField("Correct amount", text: $correctionValue) }
@@ -144,7 +153,8 @@ struct HabitDetail: View {
                                     guard let n = Decimal(string: correctionValue, locale: Locale(identifier: "en_US_POSIX")) else { model.error = "Enter a valid number"; return }
                                     value = .amount(n)
                                 }
-                                if model.change({ try $0.record(habitID: habitID, on: day, value: value, supersedes: correcting, note: "Value correction") }) { correcting = nil }
+                                let targetDay = CalendarDay(date: correctionDate)
+                                if model.change({ try $0.record(habitID: habitID, on: targetDay, value: value, supersedes: correcting, note: "Observation correction", occurrenceMinute: correctionHasTime ? minuteOfDay(correctionTime) : nil) }) { correcting = nil; selectedDate = correctionDate }
                             }
                         }.navigationTitle("Correct record").toolbar { Button("Cancel") { correcting = nil } }
                     }.frame(minWidth: 300, minHeight: 250)
@@ -163,7 +173,7 @@ struct HabitDetail: View {
         }.onAppear { selectedDate = initialDay.date(timezone: .current) }
     }
     private func record(_ value: ObservationValue, supersedes: UUID? = nil) {
-        if model.change({ try $0.record(habitID: habitID, on: day, value: value, supersedes: supersedes, note: note) }) { note = "" }
+        if model.change({ try $0.record(habitID: habitID, on: day, value: value, supersedes: supersedes, note: note, occurrenceMinute: occurrenceHasTime ? minuteOfDay(occurrenceTime) : nil) }) { note = "" }
     }
 }
 
@@ -181,20 +191,29 @@ struct RelationshipEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker("Relationship", selection: $kind) { ForEach(RelationshipKind.allCases, id: \.self) { Text($0.rawValue).tag($0) } }
+                Picker("Relationship", selection: $kind) { ForEach(RelationshipKind.allCases, id: \.self) { Text($0.label).tag($0) } }.accessibilityIdentifier("relationship.kind")
                 Picker("Child habit", selection: $childID) {
                     Text("Choose a habit").tag(nil as UUID?)
                     ForEach(model.snapshot.habits.filter { $0.id != parentID }) { habit in
                         Text(habit.configurations.last?.name ?? "Habit").tag(habit.id as UUID?)
                     }
-                }
-                Text("Prerequisite: child must succeed before parent. Follow-up: parent must succeed before child. Routine steps follow their insertion order and inherit the parent schedule. Ordinary subhabits keep their schedule.").font(.caption)
+                }.accessibilityIdentifier("relationship.child")
+                Text("Prerequisite: child must succeed before parent. Follow-up: parent must succeed before child. Ordinary subhabits and routine steps keep their own schedules. A routine parent is completed by its applicable steps, without an order gate.").font(.caption)
                 Button("Link") {
                     guard let childID else { return }
                     let order = model.snapshot.relationships.filter { $0.parentID == parentID && $0.kind == .routineStep }.count
-                    if model.change({ try $0.addRelationship(Relationship(parentID: parentID, childID: childID, kind: kind, from: day, order: order)) }) { dismiss() }
+                    if model.change({ s in
+                        if kind == .subhabit || kind == .routineStep { try s.changeOrdinaryParent(childID: childID, parentID: parentID, role: kind, from: day) }
+                        else { try s.addRelationship(Relationship(parentID: parentID, childID: childID, kind: kind, from: day, order: order)) }
+                    }) { dismiss() }
                 }.disabled(childID == nil)
             }.navigationTitle("Related habit").toolbar { Button("Cancel") { dismiss() } }
         }.frame(minWidth: 320, minHeight: 350)
+    }
+}
+
+extension RelationshipKind {
+    var label: String {
+        switch self { case .subhabit: "Ordinary subhabit"; case .routineStep: "Routine step"; case .prerequisite: "Prerequisite"; case .followUp: "Follow-up" }
     }
 }

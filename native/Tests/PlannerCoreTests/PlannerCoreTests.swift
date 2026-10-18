@@ -130,13 +130,16 @@ final class PlannerCoreTests: XCTestCase {
         try s.record(habitID: b, on: day, value: .boolean(true), boundary: day)
         XCTAssertEqual(try s.status(habitID: a, on: day).outcome, .missing)
     }
-    func testRoutineStepsOrdered() throws {
+    func testRoutineStepsKeepOwnScheduleAndDeriveParent() throws {
         var (s,p) = try makeHabit(); let a = try s.createHabit(HabitConfiguration(name: "A", from: day)); let b = try s.createHabit(HabitConfiguration(name: "B", from: day))
         try s.addRelationship(Relationship(parentID: p, childID: a, kind: .routineStep, from: day, order: 0))
         try s.addRelationship(Relationship(parentID: p, childID: b, kind: .routineStep, from: day, order: 1))
-        XCTAssertEqual(try s.status(habitID: b, on: day).outcome, .blocked)
-        try s.record(habitID: a, on: day, value: .boolean(true), boundary: day)
         XCTAssertEqual(try s.status(habitID: b, on: day).outcome, .missing)
+        try s.record(habitID: b, on: day, value: .boolean(true), boundary: day)
+        XCTAssertEqual(try s.status(habitID: p, on: day).credit, Decimal(string: "0.5"))
+        XCTAssertThrowsError(try s.record(habitID: p, on: day, value: .boolean(true), boundary: day))
+        try s.record(habitID: a, on: day, value: .boolean(true), boundary: day)
+        XCTAssertEqual(try s.status(habitID: p, on: day).outcome, .success)
     }
     func testRecursiveDeletionRequiresExplicitChoice() throws {
         var (s,a) = try makeHabit(); let b = try s.createHabit(HabitConfiguration(name: "B", from: day))
@@ -160,7 +163,7 @@ final class PlannerCoreTests: XCTestCase {
     }
     func testGrowthRestartClosesPreviousAttempt() throws {
         var (s,id) = try makeHabit()
-        try s.restartGrowth(habitID: id, on: day, cue: "After coffee", enjoyment: "Quiet")
+        try s.restartGrowth(habitID: id, on: day, cue: "After coffee", enjoyment: "yes")
         try s.restartGrowth(habitID: id, on: day.adding(days: 3), cue: "", enjoyment: "")
         XCTAssertEqual(s.attempts[0].endExclusive, try day.adding(days: 3)); try s.validate()
     }
@@ -199,8 +202,9 @@ final class PlannerCoreTests: XCTestCase {
         s.habits[0].configurations[0].tracking.comparison = .atMost
         XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .missing)
         try s.record(habitID: id, on: day, value: .amount(0), boundary: day)
-        XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .success)
+        XCTAssertEqual(try s.status(habitID: id, on: day, boundary: day).outcome, .provisional)
+        XCTAssertEqual(try s.status(habitID: id, on: day, boundary: day.adding(days: 1)).outcome, .success)
         try s.record(habitID: id, on: day, value: .amount(4), boundary: day)
-        XCTAssertEqual(try s.status(habitID: id, on: day).outcome, .unsuccessful)
+        XCTAssertEqual(try s.status(habitID: id, on: day, boundary: day.adding(days: 1)).outcome, .unsuccessful)
     }
 }

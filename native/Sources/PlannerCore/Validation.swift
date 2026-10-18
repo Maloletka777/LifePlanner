@@ -2,6 +2,7 @@ import Foundation
 
 extension PlannerSnapshot {
     public func validate() throws {
+        try validateFocus()
         guard formatVersion == 1, revision >= 0 else { throw PlannerError.invalid("Unsupported backup format or revision") }
         func unique<T: Hashable>(_ ids: [T]) throws {
             guard Set(ids).count == ids.count else { throw PlannerError.invalid("Duplicate identifiers in backup") }
@@ -47,10 +48,22 @@ extension PlannerSnapshot {
             case .skipped: break
             }
             if let parent = fact.supersedes {
-                guard let previous = seen[parent], previous.habitID == fact.habitID, previous.day == fact.day,
+                guard let previous = seen[parent], previous.habitID == fact.habitID,
                       previous.recordedAt <= fact.recordedAt, corrected.insert(parent).inserted else {
                     throw PlannerError.invalid("Broken or branching correction history")
                 }
+            }
+            if let minute = fact.occurrenceMinute, !(0..<1440).contains(minute) { throw PlannerError.invalid("Invalid observation time") }
+            if let context = fact.contextConfiguration {
+                try context.validate()
+                guard context.effective.contains(fact.day), context.tracking.mode == configuration.tracking.mode else { throw PlannerError.invalid("Mismatched historical observation context") }
+            }
+            if let context = fact.contextRelationship {
+                try context.effective.validate()
+                guard context.childID == fact.habitID, context.effective.contains(fact.day) else { throw PlannerError.invalid("Mismatched historical relationship context") }
+            }
+            if fact.correctionReason == .reversal || fact.correctionReason == .duplicateEntry {
+                guard fact.value == .void, fact.supersedes != nil else { throw PlannerError.invalid("Invalid reversal intent") }
             }
             seen[fact.id] = fact
         }

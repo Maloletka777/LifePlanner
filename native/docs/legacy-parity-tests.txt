@@ -1,0 +1,34 @@
+✔ simple roots of every supported tracking mode retain independent selected-date actions (50.8767ms)
+✔ organizational relationships remain independent and conditional relationships never create containers (27.0874ms)
+✔ one or many routine steps derive exact bounded container and selected-root progress (37.6418ms)
+✔ routine progress keeps metric partial credit and blocked applicable steps in the direct denominator (27.8918ms)
+✔ parent and child scheduling produce explicit no-applicable and parent-bounded states (24.3777ms)
+✔ skipped steps are excluded while provisional, future, and blocked steps retain bounded applicability (24.7849ms)
+✔ nested routine containers contribute once without flattening descendants (24.5861ms)
+✔ last-step detach and child archive restore independent parent semantics at the effective boundary (48.2319ms)
+✔ legacy metric parent history remains append-only while new container observations are refused (26.1317ms)
+✔ bundle creation persists organizational and routine-step roles atomically with stable child identity (41.2998ms)
+✔ atomic bundles support one, two, five, ten, and safely nested routine steps (129.4389ms)
+✔ unsupported completion roles are rejected before relationship persistence (26.2084ms)
+✔ the anchor really is a Monday, so every weekday fixture below means what it says (1.091ms)
+✔ a weekday is named only when it fails and the other days do not (0.733ms)
+✔ a routine failing everywhere is not a Wednesday problem (0.2195ms)
+✔ two misses on a weekday are not yet a pattern (0.136ms)
+✔ a routine filed in the morning and done after noon is told so (0.1504ms)
+✔ an item done in the block it belongs to says nothing at all (0.115ms)
+✔ a plan bigger than the life is named as the plan, not as a failure (0.1808ms)
+✔ a routine doing well is left alone even when it slips once (0.949ms)
+✔ a block that only fails when it is full is named as crowding (0.2466ms)
+✔ a routine standing last in a block that never reaches it is told where it stands (0.1791ms)
+✔ an item standing first is never diagnosed as standing last (0.1092ms)
+✔ the strongest pattern comes first, because the screen shows one (0.5476ms)
+✔ returning is an achievement three times, and after that it is a pattern (0.1467ms)
+✔ stopping is offered only after help was given and did not help (0.1154ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28468.946
