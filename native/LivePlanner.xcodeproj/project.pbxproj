@@ -59,9 +59,15 @@
 			"path" = "TodayView.swift";
 			"sourceTree" = "<group>";
 		};
+		"3685E330EC5277A9DD5661C6" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"path" = "Assets.xcassets";
+			"sourceTree" = "<group>";
+		};
 		"3A2A88DEEFF3D1D23E496597" = {
 			"isa" = "PBXGroup";
-			"children" = ("0C91A4EDF5A8F29DA1C02A7F", "EFE804169C9A0B389500A303", "BE7CADDD2E317D6B7DF76230", "19B91010EF3D965F221B9AD9", "C7BB94033FFBEE446F3C92C2", "DF6D4AE3AEB59E0D1B95EC16", "F557E7613C522594926CEB0D", "47A5B92B985BC9B006CC64A2", "4F74EF7AD95ABD8CB1529C64");
+			"children" = ("0C91A4EDF5A8F29DA1C02A7F", "EFE804169C9A0B389500A303", "BE7CADDD2E317D6B7DF76230", "19B91010EF3D965F221B9AD9", "C7BB94033FFBEE446F3C92C2", "DF6D4AE3AEB59E0D1B95EC16", "F557E7613C522594926CEB0D", "47A5B92B985BC9B006CC64A2", "4F74EF7AD95ABD8CB1529C64", "3685E330EC5277A9DD5661C6");
 			"path" = "AppleApp";
 			"sourceTree" = "<group>";
 		};
@@ -147,10 +153,14 @@
 			"files" = ("CD431137566A1B1EA03FB32D", "2307F5305BA20D72A68A3FEC");
 			"runOnlyForDeploymentPostprocessing" = 0;
 		};
+		"920047E982C5FE0BD8F2B305" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3685E330EC5277A9DD5661C6";
+		};
 		"1788E0F58C67F5B86F16E23A" = {
 			"isa" = "PBXResourcesBuildPhase";
 			"buildActionMask" = 2147483647;
-			"files" = ();
+			"files" = ("920047E982C5FE0BD8F2B305");
 			"runOnlyForDeploymentPostprocessing" = 0;
 		};
 		"B8AABC99792B0F0BE375FBD5" = {
@@ -180,6 +190,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
 				"SUPPORTS_MACCATALYST" = "NO";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"INFOPLIST_KEY_ITSAppUsesNonExemptEncryption" = "NO";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf";
 				"ONLY_ACTIVE_ARCH" = "YES";
@@ -206,6 +218,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
 				"SUPPORTS_MACCATALYST" = "NO";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"INFOPLIST_KEY_ITSAppUsesNonExemptEncryption" = "NO";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
 				"ONLY_ACTIVE_ARCH" = "NO";

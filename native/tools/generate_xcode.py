@@ -20,7 +20,8 @@ def configurations(name, settings):
 file_refs=[]
 for path in sorted((ROOT/'AppleApp').glob('*.swift')):
     file_refs.append(obj('file:'+path.name,'PBXFileReference',lastKnownFileType='sourcecode.swift',path=path.name,sourceTree='<group>'))
-app_group = obj('appgroup','PBXGroup',children=file_refs,path='AppleApp',sourceTree='<group>')
+assets = obj('assets','PBXFileReference',lastKnownFileType='folder.assetcatalog',path='Assets.xcassets',sourceTree='<group>')
+app_group = obj('appgroup','PBXGroup',children=file_refs+[assets],path='AppleApp',sourceTree='<group>')
 ui_file = obj('uifile','PBXFileReference',lastKnownFileType='sourcecode.swift',path='PlannerUITests.swift',sourceTree='<group>')
 ui_group = obj('uigroup','PBXGroup',children=[ui_file],path='AppleUITests',sourceTree='<group>')
 package = obj('package','XCLocalSwiftPackageReference',relativePath='.')
@@ -33,14 +34,16 @@ for name, sdk, bundle in [('LivePlanner','iphoneos','com.olegkotikov.liveplanner
         p = obj(name+product,'XCSwiftPackageProductDependency',package=package,productName=product)
         package_products.append(p); framework_files.append(obj(name+product+'build','PBXBuildFile',productRef=p))
     frameworks = obj(name+'frameworks','PBXFrameworksBuildPhase',buildActionMask=2147483647,files=framework_files,runOnlyForDeploymentPostprocessing=0)
-    resources = obj(name+'resources','PBXResourcesBuildPhase',buildActionMask=2147483647,files=[],runOnlyForDeploymentPostprocessing=0)
+    resource_files = [obj(name+'assets','PBXBuildFile',fileRef=assets)] if sdk == 'iphoneos' else []
+    resources = obj(name+'resources','PBXResourcesBuildPhase',buildActionMask=2147483647,files=resource_files,runOnlyForDeploymentPostprocessing=0)
     product = obj(name+'product','PBXFileReference',explicitFileType='wrapper.application',includeInIndex=0,path=name+'.app',sourceTree='BUILT_PRODUCTS_DIR'); products.append(product)
     settings={'PRODUCT_NAME':'$(TARGET_NAME)','PRODUCT_BUNDLE_IDENTIFIER':bundle,'SWIFT_VERSION':'6.0','GENERATE_INFOPLIST_FILE':'YES',
               'INFOPLIST_KEY_CFBundleDisplayName':'Live Planner Swift','MARKETING_VERSION':'0.1.0','CURRENT_PROJECT_VERSION':'1',
               'SDKROOT':sdk,'CODE_SIGN_STYLE':'Automatic','ENABLE_HARDENED_RUNTIME':'YES'}
     if sdk == 'iphoneos':
         settings.update({'IPHONEOS_DEPLOYMENT_TARGET':'17.0','TARGETED_DEVICE_FAMILY':'1,2','SUPPORTED_PLATFORMS':'iphoneos iphonesimulator',
-                         'INFOPLIST_KEY_UILaunchScreen_Generation':'YES','INFOPLIST_KEY_UIApplicationSceneManifest_Generation':'YES','SUPPORTS_MACCATALYST':'NO'})
+                         'INFOPLIST_KEY_UILaunchScreen_Generation':'YES','INFOPLIST_KEY_UIApplicationSceneManifest_Generation':'YES','SUPPORTS_MACCATALYST':'NO',
+                         'ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon','INFOPLIST_KEY_ITSAppUsesNonExemptEncryption':'NO'})
     else:
         settings.update({'MACOSX_DEPLOYMENT_TARGET':'14.0','SUPPORTED_PLATFORMS':'macosx','ENABLE_APP_SANDBOX':'YES',
                          'ENABLE_USER_SELECTED_FILES':'readwrite','CODE_SIGN_ENTITLEMENTS':'AppleApp/LivePlannerMac.entitlements'})
