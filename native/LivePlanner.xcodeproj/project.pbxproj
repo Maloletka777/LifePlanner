@@ -162,6 +162,7 @@
 				"SUPPORTS_MACCATALYST" = "NO";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ONLY_ACTIVE_ARCH" = "YES";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
 			};
 		};
@@ -187,6 +188,7 @@
 				"SUPPORTS_MACCATALYST" = "NO";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ONLY_ACTIVE_ARCH" = "NO";
 			};
 		};
 		"F58CD6B2D02F72158804FFB3" = {
@@ -299,6 +301,7 @@
 				"CODE_SIGN_ENTITLEMENTS" = "AppleApp/LivePlannerMac.entitlements";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ONLY_ACTIVE_ARCH" = "YES";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
 			};
 		};
@@ -323,6 +326,7 @@
 				"CODE_SIGN_ENTITLEMENTS" = "AppleApp/LivePlannerMac.entitlements";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ONLY_ACTIVE_ARCH" = "NO";
 			};
 		};
 		"681282619387DE9FCFF70522" = {
@@ -393,6 +397,7 @@
 				"CODE_SIGN_STYLE" = "Automatic";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ONLY_ACTIVE_ARCH" = "YES";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
 			};
 		};
@@ -411,6 +416,7 @@
 				"CODE_SIGN_STYLE" = "Automatic";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ONLY_ACTIVE_ARCH" = "NO";
 			};
 		};
 		"74F0373D703A34E74CD83909" = {
@@ -450,6 +456,7 @@
 				"SWIFT_STRICT_CONCURRENCY" = "complete";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"ONLY_ACTIVE_ARCH" = "YES";
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
 			};
 		};
@@ -462,6 +469,7 @@
 				"SWIFT_STRICT_CONCURRENCY" = "complete";
 				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
 				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"ONLY_ACTIVE_ARCH" = "NO";
 			};
 		};
 		"862894B703A6DEDF96A9DD6C" = {

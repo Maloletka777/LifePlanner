@@ -12,7 +12,7 @@ def configurations(name, settings):
     refs=[]
     for mode in ('Debug','Release'):
         values=dict(settings)
-        values.update({'SWIFT_OPTIMIZATION_LEVEL': '-Onone' if mode == 'Debug' else '-O', 'DEBUG_INFORMATION_FORMAT': 'dwarf' if mode == 'Debug' else 'dwarf-with-dsym'})
+        values.update({'SWIFT_OPTIMIZATION_LEVEL': '-Onone' if mode == 'Debug' else '-O', 'DEBUG_INFORMATION_FORMAT': 'dwarf' if mode == 'Debug' else 'dwarf-with-dsym', 'ONLY_ACTIVE_ARCH': 'YES' if mode == 'Debug' else 'NO'})
         if mode == 'Debug': values['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = 'DEBUG $(inherited)'
         refs.append(obj(name+mode,'XCBuildConfiguration',name=mode,buildSettings=values))
     return obj(name+'configs','XCConfigurationList',buildConfigurations=refs,defaultConfigurationIsVisible=0,defaultConfigurationName='Release')
