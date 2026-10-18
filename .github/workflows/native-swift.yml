@@ -1,7 +1,5 @@
 name: Native Swift validation
 on:
-  push:
-    branches: [swift-migration]
   pull_request:
     paths: ['native/**', '.github/workflows/native-swift.yml']
   workflow_dispatch:
@@ -37,6 +35,12 @@ jobs:
           PY
       - name: UI behaviour tests
         run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath DerivedData -resultBundlePath ui-tests.xcresult CODE_SIGNING_ALLOWED=NO test
+      - name: Export UI screenshots
+        if: always()
+        run: |
+          if [ -d ui-tests.xcresult ]; then
+            xcrun xcresulttool export attachments --path ui-tests.xcresult --output-path ui-screenshots
+          fi
       - name: Upload validation evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,5 +48,6 @@ jobs:
           name: native-apple-validation
           path: |
             native/ui-tests.xcresult
+            native/ui-screenshots
             native/DerivedData/Logs
           if-no-files-found: ignore
