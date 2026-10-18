@@ -1,0 +1,12 @@
+.build/
+.swiftpm/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.db
+*.db-shm
+*.db-wal
+*.zip
+.DS_Store
+tools/__pycache__/
+.tools/

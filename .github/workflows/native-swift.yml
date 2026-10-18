@@ -1,0 +1,48 @@
+name: Native Swift validation
+on:
+  push:
+    branches: [swift-migration]
+  pull_request:
+    paths: ['native/**', '.github/workflows/native-swift.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-15
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: native
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: |
+          swift --version
+          xcodebuild -version
+      - name: Core and storage tests
+        run: swift test
+      - name: iPhone simulator build
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: macOS build
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlannerMac -configuration Debug -destination 'platform=macOS' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: Choose iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          devices=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))['devices']
+          phones=[d for runtime, group in devices.items() if 'iOS' in runtime for d in group if 'iPhone' in d['name']]
+          if not phones: raise SystemExit('No available iPhone simulator')
+          with open(os.environ['GITHUB_ENV'],'a') as f: f.write('SIMULATOR_ID='+phones[0]['udid']+'\n')
+          PY
+      - name: UI behaviour tests
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath DerivedData -resultBundlePath ui-tests.xcresult CODE_SIGNING_ALLOWED=NO test
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-apple-validation
+          path: |
+            native/ui-tests.xcresult
+            native/DerivedData/Logs
+          if-no-files-found: ignore
