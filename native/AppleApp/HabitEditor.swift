@@ -33,7 +33,7 @@ struct HabitEditor: View {
                 }
                 Section(habitID == nil ? "Starts on" : "Change applies from") {
                     DatePicker("Effective date", selection: $effectiveDate, displayedComponents: .date)
-                    if habitID != nil { Text("Earlier configurations and observations are retained. Changes cannot overwrite a configuration already used by observations on its first day.").font(.caption).foregroundStyle(.secondary) }
+                    if habitID != nil { Text("Earlier configurations and observations are retained. Choose a date after the latest observation that uses the current plan.").font(.caption).foregroundStyle(.secondary) }
                 }
                 Section("Schedule") {
                     Picker("Repeat", selection: $config.schedule.kind) { ForEach(ScheduleKind.allCases, id: \.self) { Text($0.label).tag($0) } }

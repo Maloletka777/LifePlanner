@@ -19,3 +19,13 @@
 - Prepared a research plan and CN6000 evidence notebook. No training, evaluations on external datasets or causal intervention claims were made.
 
 Further Apple validation and any resulting fixes are recorded in `VALIDATION.md` and the branch history.
+
+## Follow-up parity work — 18 October 2026
+
+- Audited active TypeScript operations separately from pure models and archived design. Recorded source references and completion gates in PARITY-AUDIT.md.
+- Corrected an initial migration mistake: routine steps retain independent schedules; derived parent progress is an equal mean of applicable steps, with nested containers and no independent parent fact. Replaced the incorrect ordered-step test.
+- Added dated selective routine conversion, reparenting, detached observation context, date/time/value correction, checklist closing/reopening facts and safe historical removal. Added an atomic rejection for configuration edits overlapping recorded facts.
+- Implemented Daily Focus cards/history, provenance, pin/copy/extend/archive and task conversion from the old schema/design requirements. Wired all five inherited diagnostic models to a new native review screen; this was not an active old screen. Added Growing stop/edit/cap validation.
+- Owner confirmed all files were supplied and no personal database is expected. Fresh native state is appropriate; no export is required to continue. No private history was imported.
+- Original TypeScript reference suites: 26 pass. Latest native Windows package: 57 pass (51 core, 6 storage). Expanded simulator suite from two to five scenarios. Exact Apple results are recorded in VALIDATION.md.
+- Documented remaining differences in flexible period qualification, numeric input and automatic suggestion application. No exact full-parity or physical-device acceptance claim is made. Datasets remain untouched.

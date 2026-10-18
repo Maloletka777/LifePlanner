@@ -52,7 +52,8 @@ final class PlannerUITests: XCTestCase {
     @MainActor func testDailyFocusConvertsToPersistedTask() throws {
         let app = XCUIApplication(); home(app)
         let history = app.buttons["Daily Focus cards & history"]; reveal(history, in: app); history.tap()
-        app.buttons["New focus"].tap()
+        let newFocus = app.buttons["New focus"]
+        XCTAssertTrue(newFocus.waitForExistence(timeout: 5)); XCTAssertTrue(newFocus.isHittable); newFocus.tap()
         let title = app.textFields["Focus title"]; XCTAssertTrue(title.waitForExistence(timeout: 5))
         title.tap(); title.typeText("UI focus conversion"); app.buttons["Save focus"].tap()
         let card = app.staticTexts["UI focus conversion"].firstMatch
@@ -85,7 +86,11 @@ final class PlannerUITests: XCTestCase {
         let app = XCUIApplication(); home(app)
         app.buttons["Add"].tap(); app.buttons["New habit"].tap()
         let title = app.textFields["Habit title"]; XCTAssertTrue(title.waitForExistence(timeout: 5)); title.tap(); title.typeText("UI checklist habit")
-        let closure = app.switches["Complete when all checklist items are checked"]; reveal(closure, in: app); closure.tap()
+        let closure = app.switches["Complete when all checklist items are checked"]; reveal(closure, in: app)
+        if closure.value as? String != "1" {
+            closure.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+        }
+        XCTAssertEqual(closure.value as? String, "1")
         let line = app.textFields["Checklist — one item per line"]; reveal(line, in: app); line.tap(); line.typeText("UI checklist step")
         app.buttons["Save"].tap()
         let habit = app.staticTexts["UI checklist habit"].firstMatch; reveal(habit, in: app); habit.tap()

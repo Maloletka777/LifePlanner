@@ -135,6 +135,9 @@ extension PlannerSnapshot {
         guard let old = habits[i].configurations.last, day >= old.effective.start else { throw PlannerError.conflict("Edit cannot precede the latest configuration") }
         var next = configuration; next.id = UUID(); next.effective = DayRange(start: day)
         try next.validate()
+        guard !observations.contains(where: { $0.configurationID == old.id && $0.day >= day }) else {
+            throw PlannerError.conflict("Existing observations use this plan on or after the selected date. Choose a date after the latest recorded occurrence to retain its history.")
+        }
         if day == old.effective.start {
             guard !observations.contains(where: { $0.configurationID == old.id }) else {
                 throw PlannerError.conflict("This configuration already has observations. Edit from a later day to retain its history.")

@@ -7,6 +7,19 @@ final class ParityTests: XCTestCase {
         var s = PlannerSnapshot(); let id = try s.createHabit(HabitConfiguration(name: "Parent", from: day))
         return (s,id)
     }
+    func testBackdatedConfigurationEditRejectsWithoutMutatingRecordedHistory() throws {
+        var (s,id) = try state()
+        let recordedDay = try day.adding(days: 2)
+        try s.record(habitID: id, on: recordedDay, value: .boolean(true))
+        let original = s
+        var replacement = s.habits[0].configurations[0]; replacement.name = "Changed"
+        XCTAssertThrowsError(try s.editHabit(id, configuration: replacement, effectiveFrom: day.adding(days: 1)))
+        XCTAssertEqual(s, original)
+        try s.validate()
+        try s.editHabit(id, configuration: replacement, effectiveFrom: recordedDay.adding(days: 1))
+        try s.validate()
+        XCTAssertEqual(try s.status(habitID: id, on: recordedDay).outcome, .success)
+    }
     func testRoutineIgnoresStepNotScheduledAndDoesNotDoubleCountChildren() throws {
         var (s,p) = try state(); let a = try s.createHabit(HabitConfiguration(name: "A", from: day))
         var config = HabitConfiguration(name: "Tuesday", from: day); config.schedule.kind = .weekly; config.schedule.weekday = 2

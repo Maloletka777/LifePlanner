@@ -30,7 +30,7 @@ The owner selected Swift to enable native Apple development. This is an engineer
 | Five tracking modes | Checkbox, avoidance, counter, decimal quantity and duration seconds |
 | Historical settings | Effective-dated complete configurations; earlier versions retained |
 | Corrections | Append-only value correction/void with single-leaf validation; UI exposes history |
-| Relations | Ordinary subhabit, prerequisite, follow-up, ordered routine steps, effective-date unlink and cycle rejection |
+| Relations | Ordinary subhabit, prerequisite, follow-up, independently scheduled routine steps, derived parent completion, dated conversion/reparent/unlink and cycle rejection |
 | Checklists | Per-occurrence checked days and optional checkbox closure |
 | Progress | Equal/importance weights and partial at-least numeric credit; explicit skip exclusion |
 | Growing | Attempts, cues, enjoyment, inherited continuity/interruption/return rules and four supported award axes; optimisation remains empty without accepted-suggestion facts |
@@ -42,13 +42,17 @@ This is a functional rewrite, not a line-by-line preservation of every old exper
 
 - The old custom animated date strip, liquid transitions, plate layouts, detailed category palette and gestures are replaced with standard native controls. Visual parity has not been claimed.
 - Schedule, tracking and identity history now share a complete configuration version instead of independent Expo version tables. Editing from a day already used by observations on the configuration's first day is rejected rather than rewriting history.
-- Relationship semantics cover the basic cases; old detached-dependent context, ordinary-child completion-role variants and effective-dated routine conversion need fixture-level comparison before importing legacy history.
-- Old rule-based diagnostic suggestions and their one-tap plan modifications are not yet ported. The native UI does not display invented diagnoses. Growth thresholds were ported as product rules, not validated behavioural science.
-- Corrections change values or void facts on the same occurrence. The old cross-date correction/context-migration workflow requires a separate migration design.
-- Daily-focus pin/copy/extend and conversion-to-task provenance from the old database is not represented in the simple native journal.
-- Native storage is a new schema; automatic conversion of a populated Expo database is not implemented. This is an acceptance gap, not a reason to discard the old app.
+- Source audit corrected the initial routine implementation: steps have independent schedules and the parent derives their equal mean, rather than imposing ordered gates. Nested routines, selective dated conversion, reparenting and preserved detached observation context now have regression tests. See `PARITY-AUDIT.md` for evidence and remaining comparison boundaries.
+- All five inherited diagnostic rule models are ported and connected to a new native review screen. No production caller for the old pure model was found. Native review opens the plan editor; automatically applying a suggested plan and optimisation awards based on accepted suggestions are not implemented. Thresholds are product rules, not validated behavioural science.
+- Corrections can change date, optional actual time or value, or void a fact. Original facts and their captured configuration/relationship context remain in history; corrections cannot cross tracking-mode boundaries.
+- Daily Focus now has dated cards, checklists, searchable history, pin/copy/extend/archive and idempotent conversion to a task. Original evidence was schema/design, not running application operations; successor/provenance behaviour is an explicit native implementation choice.
+- Flexible schedules currently count distinct successful days toward the configured period target. The old resolver instead aggregates observations across its selected period before qualification; `periodTargetCount` was not used by that qualifier. This is a documented behavioural difference requiring a product decision before claiming exact legacy equivalence. Open daily numeric at-most results are provisional and excluded from progress.
+- Native numeric recording accepts an explicit zero, unlike the old positive-only counter/duration delta validator. This distinguishes a reported zero from a missing report. Native decimal quantities also do not enforce the old per-target fixed scale. These are native input choices, not proven identical migrations.
+- Native storage is a new schema; automatic conversion of a populated Expo database is not implemented. The owner confirmed no personal database history is available or expected, so this does not block the fresh native installation. Any later legacy import needs a separate reconciliation procedure.
 
 ## Legacy data acceptance procedure
+
+This procedure applies only if legacy history is supplied later. The owner currently has no database to migrate.
 
 1. Obtain an exported copy of the device database without uninstalling the old app. If WAL is active, export with SQLite's backup API or collect a consistent database/WAL pair.
 2. Work only on a copy. Record SHA-256, schema version, table shape, row counts and corruption checks. Preserve the original file independently.

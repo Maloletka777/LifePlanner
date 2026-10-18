@@ -30,9 +30,9 @@ struct TodayView: View {
                         } else { Text("No eligible items for this day").foregroundStyle(.secondary) }
                         let entry = model.snapshot.journal.first { $0.day == day }
                         if let focus = entry?.focus, !focus.isEmpty { Text(focus).font(.headline) }
-                        Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
-                        NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
                     }.padding(.vertical, 8)
+                    Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
+                    NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
                 }
                 let focusCards = model.snapshot.focusEntries.filter { $0.isVisible(on: day) }
                 if !focusCards.isEmpty {
