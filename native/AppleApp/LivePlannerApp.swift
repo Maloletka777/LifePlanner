@@ -63,17 +63,17 @@ final class PlannerModel: ObservableObject {
         reminderTask = Task { @MainActor in
             do {
                 let center = UNUserNotificationCenter.current()
-                let settings = await center.notificationSettings()
+                let authorization = await notificationAuthorization()
                 guard !Task.isCancelled else { return }
-                guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-                    reminderStatus = settings.authorizationStatus == .denied ? "Permission denied" : "Not requested"; return
+                guard authorization == UNAuthorizationStatus.authorized.rawValue || authorization == UNAuthorizationStatus.provisional.rawValue else {
+                    reminderStatus = authorization == UNAuthorizationStatus.denied.rawValue ? "Permission denied" : "Not requested"; return
                 }
                 let plan = try snapshot.reminderPlan()
-                let pending = await center.pendingNotificationRequests()
+                let pending = await pendingNotificationIDs()
                 guard !Task.isCancelled else { return }
                 // Only remove this app's planner requests. Never clear other notification families.
                 let wanted = Set(plan.map(\.id))
-                let stale = pending.filter { $0.identifier.hasPrefix("liveplanner.") && !wanted.contains($0.identifier) }.map(\.identifier)
+                let stale = pending.filter { $0.hasPrefix("liveplanner.") && !wanted.contains($0) }
                 center.removePendingNotificationRequests(withIdentifiers: stale)
                 for reminder in plan {
                     guard !Task.isCancelled else { return }
@@ -95,6 +95,23 @@ final class PlannerModel: ObservableObject {
             let safety = store.url.deletingLastPathComponent().appendingPathComponent("before-restore-\(UUID()).json")
             snapshot = try store.restoreBackup(data, safetyBackupURL: safety); refreshReminders(); return true
         } catch { self.error = error.localizedDescription; return false }
+    }
+}
+
+// Transfer only value types across Swift concurrency boundaries. Apple's older SDK
+// notification objects themselves are not Sendable.
+private func notificationAuthorization() async -> Int {
+    await withCheckedContinuation { continuation in
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            continuation.resume(returning: settings.authorizationStatus.rawValue)
+        }
+    }
+}
+private func pendingNotificationIDs() async -> [String] {
+    await withCheckedContinuation { continuation in
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            continuation.resume(returning: requests.map(\.identifier))
+        }
     }
 }
 

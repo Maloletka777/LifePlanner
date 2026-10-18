@@ -24,6 +24,14 @@ struct GrowthView: View {
                                 if let end = attempt.endExclusive { Text("Closed from \(end)").font(.caption) }
                                 if !attempt.cue.isEmpty { Text("Cue: \(attempt.cue)") }
                                 if !attempt.enjoyment.isEmpty { Text("Enjoyment: \(attempt.enjoyment)") }
+                                if let status = try? model.snapshot.growthStatus(attempt: attempt) {
+                                    Text("\(status.state.rawValue.capitalized) · \(status.displayedRun) in this stretch").font(.headline)
+                                    Text("Best \(status.bestRun) · Returns \(status.returns) · Total recorded closures \(status.totalClosed)").font(.caption)
+                                    let awards = GrowthRules.awards(status: status, from: attempt.start, through: .today)
+                                    if !awards.isEmpty {
+                                        Text(awards.map { "\($0.axis) \($0.milestone)" }.joined(separator: " · ")).font(.caption).foregroundStyle(Palette.sage)
+                                    }
+                                }
                             }
                         }
                         Button(attempts.isEmpty ? "Start an attempt" : "Start a new attempt") { selectedID = habit.id; cue = ""; enjoyment = "" }
