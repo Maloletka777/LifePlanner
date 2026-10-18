@@ -1,0 +1,12 @@
+Run: https://github.com/Maloletka777/LifePlanner/actions/runs/39139994490
+Source: c31e9b2bea22ab1cea824ec76a39019a41e3a202
+Result: successful signed App Store Connect IPA export; upload step deliberately skipped (export-only tag).
+Downloaded artifact SHA256: 45713583d17b6a728f7aa5759d2ba678ca5447206378414719a10bbf956444f8
+Build evidence: native candidate bundle, app-store-connect method, uploadedToApple=false.
+2026-10-18T15:22:02.4854580Z     Signing Identity:     "Apple Distribution: Oleg Kotikov (***)"
+2026-10-18T15:22:02.4855200Z     Provisioning Profile: "LivePlanner Swift AppStore 2026-10-18"
+2026-10-18T15:22:02.7883790Z ** ARCHIVE SUCCEEDED **
+2026-10-18T15:22:05.8473540Z ** EXPORT SUCCEEDED **
+2026-10-18T15:22:07.5735650Z SHA256 digest of uploaded artifact zip is 45713583d17b6a728f7aa5759d2ba678ca5447206378414719a10bbf956444f8
+2026-10-18T15:22:07.8089030Z Artifact signed-iphone-1.zip successfully finalized. Artifact ID 12141227691
+2026-10-18T15:22:07.8090010Z Artifact signed-iphone-1 has been successfully uploaded! Final size is 3256935 bytes. Artifact ID is 12141227691

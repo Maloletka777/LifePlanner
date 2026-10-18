@@ -40,6 +40,8 @@ Later changes to signing preparation/documentation do not alter the tested appli
 
 Release SDK preflight: run [39137052992](https://github.com/Maloletka777/LifePlanner/actions/runs/39137052992), source `5881ab7b751af419704b7bb913cfe27d7c4ec987`, passed on Xcode 26.3: 57 package tests, iOS simulator and macOS builds, an unsigned Release archive for generic iPhone, and all five simulator UI tests. See `apple-release-preflight.txt`. This confirms the current SDK build, not distribution signing, Apple upload acceptance or physical-device acceptance.
 
+Signed export: run [39139994490](https://github.com/Maloletka777/LifePlanner/actions/runs/39139994490), source `c31e9b2bea22ab1cea824ec76a39019a41e3a202`, successfully archived and exported a distribution-signed App Store Connect IPA, version 0.1.0 (1). The downloaded ZIP matches the SHA256 recorded by Actions. See `apple-signed-export-summary.txt`. Upload was skipped for this export-only run; the App Store Connect candidate-record agreement gate remains unresolved. This result supersedes the earlier statement that signing/export had not executed, but does not establish TestFlight availability.
+
 - The source revision and automated acceptance must be read with their exact runs above. Broader UI flows and physical devices still require the following checks.
 - Install a signed candidate beside the existing iPhone app; confirm no original database/container is affected.
 - Create/edit all schedule and tracking variants, archived/future habits, tasks and checklists; reload and restore backup after restart.
