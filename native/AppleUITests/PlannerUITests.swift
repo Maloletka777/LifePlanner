@@ -85,11 +85,15 @@ final class PlannerUITests: XCTestCase {
     @MainActor func testChecklistOwnsCompletionAndReopening() throws {
         let app = XCUIApplication(); home(app)
         app.buttons["Add"].tap(); app.buttons["New habit"].tap()
-        let title = app.textFields["Habit title"]; XCTAssertTrue(title.waitForExistence(timeout: 5)); title.tap(); title.typeText("UI checklist habit")
+        let title = app.textFields["Habit title"]; XCTAssertTrue(title.waitForExistence(timeout: 5)); title.tap(); title.typeText("UI checklist habit\n")
         let closure = app.switches["Complete when all checklist items are checked"]; reveal(closure, in: app)
         if closure.value as? String != "1" {
-            closure.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+            // SwiftUI exposes both a labelled row and its actual UISwitch.
+            // Tap the inner control rather than the text row or its rounded edge.
+            let control = closure.switches.firstMatch
+            if control.exists { control.tap() } else { closure.tap() }
         }
+        XCTAssertTrue(closure.waitForExistence(timeout: 5))
         XCTAssertEqual(closure.value as? String, "1")
         let line = app.textFields["Checklist — one item per line"]; reveal(line, in: app); line.tap(); line.typeText("UI checklist step")
         app.buttons["Save"].tap()

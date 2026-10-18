@@ -19,7 +19,7 @@ GitHub Actions workflow: `Native Swift validation`, branch `swift-migration`.
 - [Run 39130388765](https://github.com/Maloletka777/LifePlanner/actions/runs/39130388765), commit `284e444`: package tests passed; iOS compilation found the notification concurrency issue.
 - [Run 39130564349](https://github.com/Maloletka777/LifePlanner/actions/runs/39130564349), commit `6536b74`: package tests and iOS simulator build passed; macOS build found the debug architecture mismatch.
 - [Run 39130769441](https://github.com/Maloletka777/LifePlanner/actions/runs/39130769441), commit `182b52a`: **successful overall**. All 35 then-current package tests passed on macOS, both iOS simulator and macOS applications built successfully, and both iPhone UI tests passed (habit creation/recording and task persistence after relaunch). This used the original UI assertions; the later version strengthens the habit-state and restart assertions and adds three domain cases.
-- [Final run 39131749481](https://github.com/Maloletka777/LifePlanner/actions/runs/39131749481), commit `98d02e233dcce1a9aa33deececc73e8f066b8ba6`: **successful overall**. All **38 package tests** passed on macOS; both **iOS simulator and macOS builds** passed; both **iPhone UI tests** passed, including explicit state checks before/after recording and habit/task persistence after relaunch. The compact log is `apple-validation-summary.txt`. Subsequent documentation-only commits do not change tested application/test sources.
+- [Earlier successful run 39131749481](https://github.com/Maloletka777/LifePlanner/actions/runs/39131749481), commit `98d02e233dcce1a9aa33deececc73e8f066b8ba6`: **successful overall**. All **38 package tests** passed on macOS; both **iOS simulator and macOS builds** passed; both **iPhone UI tests** passed, including explicit state checks before/after recording and habit/task persistence after relaunch. The compact log is `apple-validation-summary.txt`. That result applies to that source revision; follow-up application changes are recorded separately below.
 
 The stricter state-label test initially failed because SwiftUI's accessibility label combines the field name and value (`State, Success`), while the assertion expected only `Success`. The captured result before and after relaunch was correctly `State, Success`; the expected label was corrected without changing application behaviour. This is recorded as a test failure, not hidden as a passing run.
 
@@ -27,9 +27,14 @@ The stricter state-label test initially failed because SwiftUI's accessibility l
 
 Xcode 16.4 / Apple Swift 6.1.2 were reported by the first runners. Native package supports Swift tools 6.0 and does not require the newer Windows compiler's language features.
 
+## Follow-up parity validation
+
+- Run [39134100848](https://github.com/Maloletka777/LifePlanner/actions/runs/39134100848), source `42a26d9`: 56 package tests and both Apple builds passed. Three of five simulator scenarios passed (habit, task restart, derived routine parent). The checklist scenario failed two state assertions; the Daily Focus scenario failed because a journal sheet covered the history toolbar. The captured accessibility hierarchy confirms the simultaneous sheet, rather than a build failure.
+- Follow-up `89d99a9` separates the journal button and history navigation into different List rows, targets the actual checklist switch control and asserts its enabled value before saving, and adds a regression protecting recorded history from backdated configuration edits. Local result is 57 passing package tests. Apple revalidation is recorded below when observed; no success is inferred from the earlier build.
+
 ## Acceptance still required
 
-- The tested native source revision is `98d02e2`; current automated acceptance is documented above. Broader UI flows and physical devices still require the following checks.
+- The source revision and automated acceptance must be read with their exact runs above. Broader UI flows and physical devices still require the following checks.
 - Install a signed candidate beside the existing iPhone app; confirm no original database/container is affected.
 - Create/edit all schedule and tracking variants, archived/future habits, tasks and checklists; reload and restore backup after restart.
 - Check notification permission denial, scheduling, delivery, travel/DST, disabled reminders and app inactivity beyond the 30-day horizon. The planner reconciles on activation and edits; indefinite background refresh is not implemented.

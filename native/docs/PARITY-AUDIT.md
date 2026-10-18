@@ -37,3 +37,11 @@ Audit started after the owner authorised completing the migration. A passing bui
 4. Fresh installation, restart, backup/restore, accessibility, keyboards, time zones and reminders verified on real iPhone. A physical-device result cannot be invented by a simulator test.
 
 No overall completion percentage is assigned. The earlier 38 tests establish only their stated cases; one of them encoded the wrong routine-step semantics and must be replaced rather than preserved as a false requirement.
+
+## Follow-up implementation and current boundaries
+
+Implemented regression coverage now includes independent and nested routine steps, dated conversion, reparenting/cycle rejection, cross-date correction and detached context, checklist close/reopen facts, safe checklist removal, Daily Focus operations/backward-compatible decoding, Growing limits and all five diagnostic patterns. A configuration edit overlapping recorded history is rejected atomically. The latest Windows suite has 57 passing tests; the original TypeScript reference suites have 26 passing tests. Apple evidence is recorded separately in VALIDATION.md.
+
+This does not establish every historical edge case. In particular, flexible period qualification differs from the legacy aggregate evaluator, explicit zero input/fixed decimal scale differ, automatic suggestion application is absent, and the old ordinary-hierarchy depth cap of five has not been reproduced (native validation rejects cycles and multiple parents but does not impose that cap). These differences are visible requirements for further decisions, not silently certified parity. Old reminder delivery and full accessibility/device behaviour are also outside the automated evidence.
+
+The owner has no Mac. Physical acceptance therefore needs a separately signed cloud build and distribution setup; see IPHONE-WITHOUT-MAC-RU.md. This is independent of the absence of a legacy database.

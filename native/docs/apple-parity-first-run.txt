@@ -1,0 +1,22 @@
+Run: https://github.com/Maloletka777/LifePlanner/actions/runs/39134100848
+Source: 42a26d9
+Conclusion: failure (UI tests); package tests and both builds passed
+2026-10-18T14:01:58.4031510Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.007 (0.008) seconds
+2026-10-18T14:01:58.4053840Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2026-10-18T14:01:58.4077880Z 	 Executed 14 tests, with 0 failures (0 unexpected) in 0.013 (0.013) seconds
+2026-10-18T14:01:58.4120840Z 	 Executed 28 tests, with 0 failures (0 unexpected) in 0.012 (0.013) seconds
+2026-10-18T14:01:58.4131990Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.025 (0.025) seconds
+2026-10-18T14:01:58.4133040Z 	 Executed 56 tests, with 0 failures (0 unexpected) in 0.058 (0.061) seconds
+2026-10-18T14:01:58.4133960Z 	 Executed 56 tests, with 0 failures (0 unexpected) in 0.058 (0.063) seconds
+2026-10-18T14:02:54.5619390Z ** BUILD SUCCEEDED **
+2026-10-18T14:03:24.4712220Z ** BUILD SUCCEEDED **
+2026-10-18T14:06:17.9800800Z /Users/runner/work/LifePlanner/LifePlanner/native/AppleUITests/PlannerUITests.swift:92: error: -[LivePlannerUITests.PlannerUITests testChecklistOwnsCompletionAndReopening] : XCTAssertFalse failed
+2026-10-18T14:06:19.7152510Z /Users/runner/work/LifePlanner/LifePlanner/native/AppleUITests/PlannerUITests.swift:95: error: -[LivePlannerUITests.PlannerUITests testChecklistOwnsCompletionAndReopening] : XCTAssertEqual failed: ("State, Missing") is not equal to ("State, Success")
+2026-10-18T14:07:33.3961400Z     t =     7.28s         Failed: Failed to scroll to visible (by AX action) Button, {{340.0, 113.8}, {38.7, 40.5}}, label: 'New focus', error: Error kAXErrorCannotComplete performing AXAction kAXScrollToVisibleAction on element AX element pid: 19181, elementOrHash.elementID: 4352409344.137
+2026-10-18T14:07:34.7345040Z     t =     8.61s             Failed: Failed to scroll to visible (by AX action) Button, {{340.0, 113.8}, {38.7, 40.5}}, label: 'New focus', error: Error kAXErrorCannotComplete performing AXAction kAXScrollToVisibleAction on element AX element pid: 19181, elementOrHash.elementID: 4352409344.137
+2026-10-18T14:07:36.0289330Z     t =     9.91s             Failed: Failed to scroll to visible (by AX action) Button, {{340.0, 113.8}, {38.7, 40.5}}, label: 'New focus', error: Error kAXErrorCannotComplete performing AXAction kAXScrollToVisibleAction on element AX element pid: 19181, elementOrHash.elementID: 4352409344.137
+2026-10-18T14:07:36.1850150Z /Users/runner/work/LifePlanner/LifePlanner/native/AppleUITests/PlannerUITests.swift:55: error: -[LivePlannerUITests.PlannerUITests testDailyFocusConvertsToPersistedTask] : Failed to failed to scroll to visible (by AX action) Button, {{340.0, 113.8}, {38.7, 40.5}}, label: 'New focus', error: Error kAXErrorCannotComplete performing AXAction kAXScrollToVisibleAction on element AX element pid: 19181, elementOrHash.elementID: 4352409344.137. (Underlying Error: Error kAXErrorCannotComplete performing AXAction kAXScrollToVisibleAction on element AX element pid: 19181, elementOrHash.elementID: 4352409344.137)
+2026-10-18T14:08:28.1792230Z 	 Executed 5 tests, with 3 failures (0 unexpected) in 179.068 (179.078) seconds
+2026-10-18T14:08:28.2118980Z 	 Executed 5 tests, with 3 failures (0 unexpected) in 179.068 (179.080) seconds
+2026-10-18T14:08:28.2120790Z 	 Executed 5 tests, with 3 failures (0 unexpected) in 179.068 (179.084) seconds
+2026-10-18T14:09:02.9670950Z ** TEST FAILED **
