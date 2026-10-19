@@ -43,7 +43,9 @@ for name, sdk, bundle in [('LivePlanner','iphoneos','com.olegkotikov.liveplanner
     if sdk == 'iphoneos':
         settings.update({'IPHONEOS_DEPLOYMENT_TARGET':'17.0','TARGETED_DEVICE_FAMILY':'1,2','SUPPORTED_PLATFORMS':'iphoneos iphonesimulator',
                          'INFOPLIST_KEY_UILaunchScreen_Generation':'YES','INFOPLIST_KEY_UIApplicationSceneManifest_Generation':'YES','SUPPORTS_MACCATALYST':'NO',
-                         'ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon','INFOPLIST_KEY_ITSAppUsesNonExemptEncryption':'NO'})
+                         'ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon','INFOPLIST_KEY_ITSAppUsesNonExemptEncryption':'NO',
+                         'INFOPLIST_KEY_UISupportedInterfaceOrientations':'UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight',
+                         'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad':'UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'})
     else:
         settings.update({'MACOSX_DEPLOYMENT_TARGET':'14.0','SUPPORTED_PLATFORMS':'macosx','ENABLE_APP_SANDBOX':'YES',
                          'ENABLE_USER_SELECTED_FILES':'readwrite','CODE_SIGN_ENTITLEMENTS':'AppleApp/LivePlannerMac.entitlements'})

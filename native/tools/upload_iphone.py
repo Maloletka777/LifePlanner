@@ -8,6 +8,26 @@ import subprocess
 import tempfile
 
 
+def verify_response(stdout, stderr):
+    # altool can exit zero while its JSON reports a rejected package.
+    decoder = json.JSONDecoder()
+    for stream in (stdout, stderr):
+        for position, character in enumerate(stream):
+            if character != "{":
+                continue
+            try:
+                result, _ = decoder.raw_decode(stream[position:])
+            except ValueError:
+                continue
+            if not isinstance(result, dict):
+                continue
+            if result.get("product-errors"):
+                raise SystemExit("Apple rejected validation/upload; see the JSON diagnostics")
+            if result.get("success-message"):
+                return
+    raise SystemExit("Apple did not provide a recognised success response; delivery is unconfirmed")
+
+
 def main():
     names = ("ASC_KEY_ID", "ASC_ISSUER_ID", "ASC_PRIVATE_KEY_BASE64")
     if any(not os.environ.get(name) for name in names):
@@ -31,9 +51,12 @@ def main():
         key.write_bytes(base64.b64decode(os.environ["ASC_PRIVATE_KEY_BASE64"], validate=True))
         key.chmod(0o600)
         for operation in ("--validate-app", "--upload-app"):
-            subprocess.run(["xcrun", "altool", operation, "--file", str(packages[0].resolve()),
+            result = subprocess.run(["xcrun", "altool", operation, "--file", str(packages[0].resolve()),
                 "--type", "ios", "--apiKey", key_id, "--apiIssuer", issuer,
-                "--output-format", "json"], cwd=folder, check=True)
+                "--output-format", "json"], cwd=folder, check=True, capture_output=True, text=True)
+            print(result.stdout, flush=True)
+            print(result.stderr, flush=True)
+            verify_response(result.stdout, result.stderr)
     evidence.update({"uploadedToApple": True, "processingVerified": False})
     evidence_path.write_text(json.dumps(evidence, indent=2))
     print("Apple accepted the upload command. Verify processing and the exact build in TestFlight before claiming availability.")
