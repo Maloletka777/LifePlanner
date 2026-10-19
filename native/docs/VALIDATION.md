@@ -51,3 +51,11 @@ Signed export: run [39139994490](https://github.com/Maloletka777/LifePlanner/act
 - Measure responsiveness and database size with realistic large histories. The current aggregate storage and repeated per-day calculations are intentionally simple and have no scalability claim.
 
 No App Store/TestFlight release, physical-iPhone usability acceptance, Watch app, inter-device sync, trained model or behavioural-effectiveness trial has been performed.
+
+## 19 October delivery follow-up
+
+Final outcome: App Store Connect processed **0.1.0 (3)** and its internal group **Owner Swift Testing** shows **1 Tester, 1 Build**, status **Testing**. The account owner is the sole tester. This verifies TestFlight delivery/internal availability; it does not verify installation, notification delivery or other physical-device acceptance.
+
+Apple cleared the account agreement block and the separate app record is 6824491469. Run 39248028493's first upload was rejected for missing iPad orientation declarations despite a zero altool exit code; that run's successful CI badge and uploadedToApple evidence are not proof of delivery. Source 2d58491 adds supported orientations and requires an explicit positive Apple JSON response. Local response handling checks cover success, product-errors and unrecognised output.
+
+Retry run [39248476290](https://github.com/Maloletka777/LifePlanner/actions/runs/39248476290), source `2d58491d71b6745b9eac0d98b5324e525f542a37`, passed signed export and Apple validation/upload with explicit success-message responses. The exported IPA is 0.1.0 (3) and contains all four generic/iPad orientation values as arrays. App Store Connect shows that exact build under Build Uploads as Processing. Group assignment and installation are not yet verified. See `apple-testflight-upload-summary.txt` and `TESTFLIGHT-UPLOAD-STATUS.md`; these later observations supersede earlier no-upload statements above, but not physical-device or research limitations.

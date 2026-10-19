@@ -1,8 +1,18 @@
 # TestFlight upload preparation — 18 October 2026
 
+**Current outcome, 19 October 2026:** native version **0.1.0 (3)** was validated, uploaded, processed by Apple and assigned to the internal **Owner Swift Testing** group. The group's Builds page shows **1 Tester, 1 Build**, build **0.1.0 (3)**, status **Testing**, expiry in 90 days. Only the owner account is assigned. No public App Store release or external group was created. Installation and physical-device acceptance remain for the owner to perform. Earlier pending/blocker observations below are historical.
+
 ## 19 October continuation
 
 The owner reported that Apple Support had cleared the agreement issue and authorised continuing. After renewed sign-in, the agreement warning disappeared and New App opened normally. Created the separate iOS App Store Connect record `6824491469`, name `Live Planner Swift`, bundle `com.olegkotikov.liveplanner.swift.dev`, primary language English (U.K.), SKU `liveplanner-swift-20261018`. TestFlight opens and currently reports No Builds. This supersedes the account blocker recorded below. Delivery and processing must still be verified.
+
+Created internal group `Owner Swift Testing`, with automatic distribution disabled, and added the account owner as its sole internal tester. Delivery run 39248028493 at source ef16b66e4e2b6e215e0483a011e31b5f2a1b2995 has passed signing/export and reached Apple validation/upload. These are intermediate observations; no processing success is inferred.
+
+That first delivery was rejected by Apple for missing supported interface orientations required for iPad multitasking. Although Actions reported success, altool returned JSON `product-errors` with a zero process exit status. Consequently, its uploadedToApple=true evidence is invalid and must not be used as proof of delivery. Added orientation declarations to the generated iOS plist settings and changed the uploader to reject JSON product-errors/unknown responses, requiring an explicit success-message. Checked success, rejection and unknown-response cases locally. Retrying in run 39248476290, source 2d58491d71b6745b9eac0d98b5324e525f542a37; result pending.
+
+Retry run 39248476290 succeeded: Apple's JSON explicitly reports no validation or upload errors, with VERIFY SUCCEEDED and UPLOAD SUCCEEDED. Downloaded artifact confirms version 0.1.0 (3), the native bundle and all four orientation entries as plist arrays (generic and iPad). Evidence now truthfully records uploadedToApple=true and processingVerified=false. See apple-testflight-upload-summary.txt. Apple processing and assignment to the internal group are still pending verification.
+
+Final UI verification: Processing completed; build 3 became Ready to Test. Added that exact build to Owner Swift Testing, then observed 0.1.0 (3) as Testing on the group's Builds page. This separately establishes processing and internal availability, which the upload command alone could not establish.
 
 The owner authorised uploading the native candidate to App Store Connect/TestFlight. This is not authorisation for public App Store release, purchases or accepting legal agreements on the owner's behalf.
 
