@@ -1,5 +1,9 @@
 # TestFlight upload preparation — 18 October 2026
 
+## 19 October continuation
+
+The owner reported that Apple Support had cleared the agreement issue and authorised continuing. After renewed sign-in, the agreement warning disappeared and New App opened normally. Created the separate iOS App Store Connect record `6824491469`, name `Live Planner Swift`, bundle `com.olegkotikov.liveplanner.swift.dev`, primary language English (U.K.), SKU `liveplanner-swift-20261018`. TestFlight opens and currently reports No Builds. This supersedes the account blocker recorded below. Delivery and processing must still be verified.
+
 The owner authorised uploading the native candidate to App Store Connect/TestFlight. This is not authorisation for public App Store release, purchases or accepting legal agreements on the owner's behalf.
 
 ## Account observations
