@@ -169,9 +169,16 @@ private struct DayAgenda: View {
             .sorted { ($0.configuration(on: day)?.plannedMinute ?? 0) < ($1.configuration(on: day)?.plannedMinute ?? 0) }
         let hourTasks = tasks.filter { ($0.plannedMinute ?? -60) / 60 == hour }
             .sorted { ($0.plannedMinute ?? 0) < ($1.plannedMinute ?? 0) }
-        let entries = (hourHabits.map { Entry(id: $0.id, minute: $0.configuration(on: day)?.plannedMinute ?? 0, habit: $0) }
-            + hourTasks.map { Entry(id: $0.id, minute: $0.plannedMinute ?? 0, task: $0) })
-            .sorted { $0.minute == $1.minute ? $0.id.uuidString < $1.id.uuidString : $0.minute < $1.minute }
+        let habitEntries: [Entry] = hourHabits.map { habit in
+            Entry(id: habit.id, minute: habit.configuration(on: day)?.plannedMinute ?? 0, habit: habit)
+        }
+        let taskEntries: [Entry] = hourTasks.map { task in
+            Entry(id: task.id, minute: task.plannedMinute ?? 0, task: task)
+        }
+        let entries: [Entry] = (habitEntries + taskEntries).sorted { lhs, rhs in
+            if lhs.minute != rhs.minute { return lhs.minute < rhs.minute }
+            return lhs.id.uuidString < rhs.id.uuidString
+        }
         let isCurrent = day == CalendarDay(date: now) && Calendar.current.component(.hour, from: now) == hour
         return HStack(alignment: .top, spacing: 10) {
             VStack(spacing: 0) {
