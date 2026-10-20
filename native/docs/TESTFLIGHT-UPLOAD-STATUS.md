@@ -1,3 +1,14 @@
+## Verified delivery — 20 October 2026
+
+Restored design delivered as **0.1.0 (6)**, app source `f8a05991842d6e71038875536517c8582e87417a`. Validation run [39428457294](https://github.com/Maloletka777/LifePlanner/actions/runs/39428457294) completed successfully: 57 core/storage tests, all seven UI scenarios, iPhone simulator and macOS builds, and unsigned Release archive. Screenshot evidence is from artifact 12268047156 on iPhone 17 Pro; see images/design-build6-empty-day.png, design-build6-dark.png and design-build6-timed-task.png.
+
+Signed delivery run [39428455492](https://github.com/Maloletka777/LifePlanner/actions/runs/39428455492) explicitly passed Apple validation and upload. Separate App Store Connect API verification confirmed build 6 processing VALID, membership in the existing internal Owner Swift Testing group, and internalBuildState IN_BETA_TESTING. Builds 4 and 5 were intermediate uploads and were not assigned to that group. Public release was not performed.
+
+The later c295e4f commit changes only the UI-test scroll helper, not application code; its additional validation run is 39429839161. The delivered app's own complete validation above is green. Source/core/database schema were unchanged by this visual restoration. The owner reported smooth operation of the previous native build; physical acceptance of this new design, larger text, landscape and Reduce Transparency remain pending. This does not claim complete parity with every historical TypeScript feature or any new data-science result.
+
+
+## Historical preparation and delivery
+
 # TestFlight upload preparation — 18 October 2026
 
 **Current outcome, 19 October 2026:** native version **0.1.0 (3)** was validated, uploaded, processed by Apple and assigned to the internal **Owner Swift Testing** group. The group's Builds page shows **1 Tester, 1 Build**, build **0.1.0 (3)**, status **Testing**, expiry in 90 days. Only the owner account is assigned. No public App Store release or external group was created. Installation and physical-device acceptance remain for the owner to perform. Earlier pending/blocker observations below are historical.
