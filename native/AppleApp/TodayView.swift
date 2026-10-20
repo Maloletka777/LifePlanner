@@ -66,7 +66,7 @@ struct TodayView: View {
                 Button { moveDay(-1) } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }
                     .accessibilityLabel("Previous day")
                 Spacer()
-                Button("Today") { select(Date()) }.font(.subheadline.weight(.semibold))
+                Button("Today") { select(Date()) }.font(.subheadline.weight(.semibold)).frame(minHeight: 44)
                 Spacer()
                 Button { moveDay(1) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }
                     .accessibilityLabel("Next day")
@@ -103,10 +103,10 @@ struct TodayView: View {
             if let entry = model.snapshot.journal.first(where: { $0.day == day }), !entry.focus.isEmpty {
                 Text(entry.focus).font(.body.weight(.medium))
             }
-            Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
-            NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
+            Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }.frame(minHeight: 44)
+            NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }.frame(minHeight: 44)
             ForEach(model.snapshot.focusEntries.filter { $0.isVisible(on: day) }) { focus in
-                NavigationLink(focus.title) { FocusDetail(focusID: focus.id) }
+                NavigationLink(focus.title) { FocusDetail(focusID: focus.id) }.frame(minHeight: 44)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading).padding(20)
@@ -160,7 +160,7 @@ private struct DayAgenda: View {
                         VStack(spacing: 16) {
                             Text(habits.isEmpty && tasks.isEmpty ? "Nothing planned for this day" : "No timed items for this day")
                                 .font(.headline).foregroundStyle(Palette.muted)
-                            Button("Add a task", systemImage: "plus", action: addTask).font(.headline)
+                            Button("Add a task", systemImage: "plus", action: addTask).font(.headline).frame(minHeight: 44)
                         }.padding(.leading, 56).padding(.horizontal, 20)
                     }
                 }
@@ -250,13 +250,13 @@ struct TaskRow: View {
         HStack {
             Button {
                 model.change { s in if let i = s.tasks.firstIndex(where: { $0.id == task.id }) { s.tasks[i].done.toggle() } }
-            } label: { Image(systemName: task.done ? "checkmark.circle.fill" : "circle").font(.title2) }
+            } label: { Image(systemName: task.done ? "checkmark.circle.fill" : "circle").font(.title2).frame(width: 44, height: 44).contentShape(Rectangle()) }
                 .buttonStyle(.borderless).disabled(day > .today).accessibilityLabel(task.done ? "Mark incomplete" : "Complete task")
             NavigationLink { TaskDetail(taskID: task.id) } label: {
                 VStack(alignment: .leading) {
                     Text(task.title)
                     if let minute = task.plannedMinute { Text(timeLabel(minute)).font(.caption).foregroundStyle(.secondary) }
-                }
+                }.frame(maxWidth: .infinity, minHeight: 44, alignment: .leading).contentShape(Rectangle())
             }
         }
     }
