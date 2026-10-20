@@ -1,6 +1,29 @@
 import XCTest
 
 final class PlannerUITests: XCTestCase {
+    @MainActor func testTimedTaskRemainsReachableOnRestoredTimeline() {
+        let app = XCUIApplication(); home(app)
+        app.buttons["Add"].tap(); app.buttons["New task"].tap()
+        let title = app.textFields["Task title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5)); title.tap(); title.typeText("UI timeline task\n")
+        let timed = app.switches["Planned time"]; reveal(timed, in: app)
+        if timed.value as? String != "1" {
+            let control = timed.switches.firstMatch
+            if control.exists { control.tap() } else { timed.tap() }
+        }
+        XCTAssertEqual(timed.value as? String, "1")
+        app.buttons["Save"].tap()
+        let item = app.staticTexts["UI timeline task"].firstMatch
+        reveal(item, in: app)
+        let timeline = XCTAttachment(screenshot: app.screenshot())
+        timeline.name = "Restored timed task"; timeline.lifetime = .keepAlways; add(timeline)
+        home(app); reveal(item, in: app)
+        XCTAssertTrue(item.isHittable)
+        app.terminate(); app.launchArguments = ["-AppleInterfaceStyle", "Dark"]; app.launch()
+        XCTAssertTrue(app.buttons["Add"].waitForExistence(timeout: 15))
+        let dark = XCTAttachment(screenshot: app.screenshot())
+        dark.name = "Restored calendar dark"; dark.lifetime = .keepAlways; add(dark)
+    }
     @MainActor func testRestoredNavigationKeepsPlannerToolsReachable() {
         let app = XCUIApplication(); app.launch()
         XCTAssertTrue(app.buttons["Add"].waitForExistence(timeout: 15))
