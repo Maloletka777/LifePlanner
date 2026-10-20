@@ -54,7 +54,7 @@ final class PlannerModel: ObservableObject {
     func enableNotifications() async {
         do {
             let allowed = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
-            reminderStatus = allowed ? "Enabled" : "Permission denied — enable in system settings"
+            reminderStatus = allowed ? "Enabled" : "Permission denied â€” enable in system settings"
             refreshReminders()
         } catch { self.error = error.localizedDescription }
     }
@@ -130,7 +130,8 @@ struct RootView: View {
         Group {
             if model.ready {
                 TabView {
-                    TodayView().tabItem { Label("Today", systemImage: "rectangle.split.2x1.fill") }
+                    TodayView().tabItem { Label("Today", systemImage: "book.closed") }
+                    NavigationStack { GrowthView() }.tabItem { Label("Growth", systemImage: "waveform.path.ecg") }
                     NavigationStack { InsightsView() }.tabItem { Label("Overview", systemImage: "chart.bar") }
                     MoreView().tabItem { Label("More", systemImage: "ellipsis.circle") }
                 }

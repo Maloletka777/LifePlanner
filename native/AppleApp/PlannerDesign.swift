@@ -7,22 +7,26 @@ import AppKit
 #endif
 
 enum Palette {
-    // Light values restored from the owner's original calendar screenshot.
-    static let background = adaptive(0xEAD6B3, 0x1D211E)
-    static let surface = adaptive(0xFAF2E7, 0x282E29)
-    static let header = adaptive(0xF4E7D4, 0x222923)
-    static let ink = adaptive(0x17213B, 0xF4EEE3)
-    static let muted = adaptive(0x626977, 0xB6BCAF)
-    static let sage = adaptive(0x365441, 0xAED0AD)
-    static let onAccent = adaptive(0xFAF2E7, 0x17261D)
-    static let line = adaptive(0xD1C3A9, 0x485248)
+    // LifePlanner 0.5.9 build 40: src/ui/theme/color-themes.ts.
+    static let background = adaptive(0xEBEDEF, 0x000000)
+    static let surface = adaptive(0xFFFFFF, 0x1C1E21)
+    static let header = adaptive(0xEBEDEF, 0x000000)
+    static let hero = adaptive(0xF2F2F2, 0x292B2E)
+    static let ink = adaptive(0x13161A, 0xF0F2F4)
+    static let muted = adaptive(0x646A70, 0xA4A8AD)
+    static let sage = adaptive(0x1E2226, 0xF0F2F4) // Existing callers: structural accent, now graphite.
+    static let onAccent = adaptive(0xFFFFFF, 0x000000)
+    static let line = adaptive(0xDEE0E2, 0x181818)
+    static let done = adaptive(0x1D7D3E, 0x6BD586)
+    static let overdue = adaptive(0xAA3832, 0xF27D72)
+    static let high = adaptive(0xA77F17, 0xEBB425)
     static func accent(_ key: String) -> Color {
         switch key {
-        case "blue": adaptive(0x466D88, 0xA4C5E0)
-        case "orange": adaptive(0x99643C, 0xE3B78D)
-        case "purple": adaptive(0x77638D, 0xCBB5DE)
-        case "pink": adaptive(0xA35E76, 0xE6B1C2)
-        default: sage
+        case "blue": adaptive(0x4A7ACB, 0x87AFF1)
+        case "orange": adaptive(0xB76041, 0xDB947A)
+        case "purple": adaptive(0x9462B7, 0xC49BE0)
+        case "pink": adaptive(0x48878E, 0x80B9C0)
+        default: adaptive(0x488D62, 0x80BE96)
         }
     }
     private static func adaptive(_ light: UInt32, _ dark: UInt32) -> Color {

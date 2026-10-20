@@ -110,7 +110,7 @@ struct TodayView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading).padding(20)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 12))
     }
     private func select(_ date: Date) {
         withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { selectedDate = date }
@@ -123,91 +123,93 @@ struct TodayView: View {
 private struct DayAgenda: View {
     private struct Entry: Identifiable {
         let id: UUID
-        let minute: Int
+        let block: DayBlock
+        let minute: Int?
+        let title: String
+        let complete: Bool
         var habit: Habit? = nil
         var task: PlannerTask? = nil
     }
     @EnvironmentObject private var model: PlannerModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var collapsed: Set<DayBlock> = []
     let day: CalendarDay
     let addTask: () -> Void
-    private var habits: [Habit] {
-        model.snapshot.habits.filter { $0.configuration(on: day) != nil && model.status($0, day: day).outcome != .notScheduled }
-    }
-    private var tasks: [PlannerTask] { model.snapshot.tasks.filter { $0.day == day && !$0.archived } }
-    private var untimedHabits: [Habit] { habits.filter { $0.configuration(on: day)?.plannedMinute == nil } }
-    private var untimedTasks: [PlannerTask] { tasks.filter { $0.plannedMinute == nil } }
-    private var hasTimedItems: Bool {
-        habits.contains { $0.configuration(on: day)?.plannedMinute != nil } || tasks.contains { $0.plannedMinute != nil }
+    private var entries: [Entry] {
+        let habits: [Entry] = model.snapshot.habits.compactMap { habit in
+            guard let config = habit.configuration(on: day), model.status(habit, day: day).outcome != .notScheduled else { return nil }
+            return Entry(id: habit.id, block: config.block, minute: config.plannedMinute, title: config.name,
+                         complete: model.status(habit, day: day).outcome == .success, habit: habit)
+        }
+        let tasks: [Entry] = model.snapshot.tasks.filter { $0.day == day && !$0.archived }.map {
+            Entry(id: $0.id, block: $0.block, minute: $0.plannedMinute, title: $0.title, complete: $0.done, task: $0)
+        }
+        return (habits + tasks).sorted {
+            if $0.minute != $1.minute { return ($0.minute ?? 1440) < ($1.minute ?? 1440) }
+            return $0.id.uuidString < $1.id.uuidString
+        }
     }
     var body: some View {
-        VStack(spacing: 0) {
-            if !untimedHabits.isEmpty || !untimedTasks.isEmpty {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Anytime").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.muted)
-                    ForEach(untimedHabits) { habit in HabitRow(habit: habit, day: day) }
-                    ForEach(untimedTasks) { task in TaskRow(task: task, day: day) }
-                }.padding(20)
-                Divider().overlay(Palette.line)
-            }
+        VStack(alignment: .leading, spacing: 8) {
             TimelineView(.periodic(from: .now, by: 60)) { context in
-                VStack(spacing: 0) {
-                    ForEach(0..<24, id: \.self) { hour in hourRow(hour, now: context.date) }
-                    HStack { Text("24:00").font(.caption.monospacedDigit()).frame(width: 52); Spacer() }
-                        .foregroundStyle(Palette.muted).padding(.leading, 8).padding(.bottom, 18)
-                }
-                .overlay {
-                    if !hasTimedItems {
-                        VStack(spacing: 16) {
-                            Text(habits.isEmpty && tasks.isEmpty ? "Nothing planned for this day" : "No timed items for this day")
-                                .font(.headline).foregroundStyle(Palette.muted)
-                            Button("Add a task", systemImage: "plus", action: addTask).font(.headline).frame(minHeight: 44)
-                        }.padding(.leading, 56).padding(.horizontal, 20)
+                nowCard(context.date)
+            }
+            HStack {
+                Text(day == .today ? "DAY" : "THE DAY AHEAD").font(.caption2.weight(.semibold)).tracking(1)
+                ProgressView(value: entries.isEmpty ? 0 : Double(entries.filter(\.complete).count) / Double(entries.count))
+                Text("\(entries.filter(\.complete).count) / \(entries.count)").font(.caption.monospacedDigit())
+            }.foregroundStyle(Palette.muted).padding(.vertical, 14)
+            if entries.isEmpty {
+                Text("Nothing planned for this day").font(.subheadline).foregroundStyle(Palette.muted).padding(.vertical, 8)
+            }
+            ForEach([DayBlock.anytime, .morning, .afternoon, .evening], id: \.self) { block in
+                let items = entries.filter { $0.block == block }
+                if block != .anytime || !items.isEmpty {
+                    HStack(spacing: 8) {
+                        Button {
+                            withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {
+                                if collapsed.contains(block) { collapsed.remove(block) } else { collapsed.insert(block) }
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: collapsed.contains(block) ? "chevron.right" : "chevron.down").font(.caption2)
+                                Text(block.rawValue.capitalized).font(.headline)
+                                if !items.isEmpty { Text("\(items.filter(\.complete).count) / \(items.count)").font(.caption).foregroundStyle(Palette.muted) }
+                            }.frame(minHeight: 44)
+                        }.accessibilityLabel(block.rawValue.capitalized)
+                        Rectangle().fill(Palette.ink.opacity(0.09)).frame(height: 1)
+                        Button(action: addTask) { Image(systemName: "plus").frame(width: 44, height: 44) }
+                            .accessibilityLabel("Add to " + block.rawValue)
+                    }.padding(.top, 8)
+                    if !collapsed.contains(block) {
+                        ForEach(items) { item in plate(item) }
                     }
                 }
             }
         }
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 28))
-        .padding(.top, 16)
-        .buttonStyle(.plain)
+        .foregroundStyle(Palette.ink).padding(.top, 12).buttonStyle(.plain)
     }
-    private func hourRow(_ hour: Int, now: Date) -> some View {
-        let hourHabits = habits.filter { ($0.configuration(on: day)?.plannedMinute ?? -60) / 60 == hour }
-            .sorted { ($0.configuration(on: day)?.plannedMinute ?? 0) < ($1.configuration(on: day)?.plannedMinute ?? 0) }
-        let hourTasks = tasks.filter { ($0.plannedMinute ?? -60) / 60 == hour }
-            .sorted { ($0.plannedMinute ?? 0) < ($1.plannedMinute ?? 0) }
-        let habitEntries: [Entry] = hourHabits.map { habit in
-            Entry(id: habit.id, minute: habit.configuration(on: day)?.plannedMinute ?? 0, habit: habit)
-        }
-        let taskEntries: [Entry] = hourTasks.map { task in
-            Entry(id: task.id, minute: task.plannedMinute ?? 0, task: task)
-        }
-        let entries: [Entry] = (habitEntries + taskEntries).sorted { lhs, rhs in
-            if lhs.minute != rhs.minute { return lhs.minute < rhs.minute }
-            return lhs.id.uuidString < rhs.id.uuidString
-        }
-        let isCurrent = day == CalendarDay(date: now) && Calendar.current.component(.hour, from: now) == hour
-        return HStack(alignment: .top, spacing: 10) {
-            VStack(spacing: 0) {
-                Text(isCurrent ? timeLabel(minuteOfDay(now)) : timeLabel(hour * 60))
-                    .font(.caption2.weight(isCurrent ? .bold : .medium).monospacedDigit())
-                    .foregroundStyle(isCurrent ? Palette.sage : Palette.muted)
-                    .opacity(hour % 4 == 0 || isCurrent || !hourHabits.isEmpty || !hourTasks.isEmpty ? 1 : 0)
-                    .frame(width: 52, alignment: .trailing)
-            }
-            VStack(spacing: 8) {
-                if isCurrent { Rectangle().fill(Palette.sage.opacity(0.6)).frame(height: 1).accessibilityHidden(true) }
-                ForEach(entries) { entry in
-                    Group {
-                        if let habit = entry.habit { HabitRow(habit: habit, day: day) }
-                        if let task = entry.task { TaskRow(task: task, day: day) }
-                    }.padding(12).background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
+    @ViewBuilder private func nowCard(_ now: Date) -> some View {
+        if day == CalendarDay(date: now), let next = entries.first(where: { !$0.complete && ($0.minute ?? -1) >= minuteOfDay(now) }) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("NEXT").font(.caption2.weight(.semibold)).tracking(1).foregroundStyle(Palette.muted)
+                    Text(next.title).font(.title3.weight(.semibold))
                 }
-            }
-            .frame(maxWidth: .infinity, minHeight: 14, alignment: .topLeading)
-            .padding(.leading, 12).padding(.bottom, 6)
-            .overlay(alignment: .leading) { Rectangle().fill(Palette.line).frame(width: 1).accessibilityHidden(true) }
+                Spacer()
+                if let minute = next.minute { Text(timeLabel(minute)).font(.subheadline.monospacedDigit()).foregroundStyle(Palette.muted) }
+            }.padding(16).background(Palette.hero, in: RoundedRectangle(cornerRadius: 12))
         }
-        .padding(.leading, 8).padding(.trailing, 16)
+    }
+    private func plate(_ item: Entry) -> some View {
+        HStack(spacing: 0) {
+            if item.habit?.configuration(on: day)?.importance == .high { Rectangle().fill(Palette.high).frame(width: 3) }
+            if item.habit?.configuration(on: day)?.importance == .critical { Rectangle().fill(Palette.overdue).frame(width: 3) }
+            Group {
+                if let habit = item.habit { HabitRow(habit: habit, day: day) }
+                if let task = item.task { TaskRow(task: task, day: day) }
+            }.padding(14).frame(maxWidth: .infinity, alignment: .leading)
+        }.background(Palette.surface, in: RoundedRectangle(cornerRadius: 12)).clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
@@ -222,7 +224,7 @@ struct HabitRow: View {
                 HabitDetail(habitID: habit.id, initialDay: day)
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: config.symbol).font(.title2).foregroundStyle(Palette.accent(config.accent)).frame(minWidth: 32)
+                    Image(systemName: config.symbol).font(.system(size: 16, weight: .semibold)).foregroundStyle(Palette.surface).frame(width: 32, height: 32).background(Palette.accent(config.accent), in: RoundedRectangle(cornerRadius: 8))
                     VStack(alignment: .leading, spacing: 4) {
                         Text(config.name).font(.headline)
                         HStack {
@@ -234,7 +236,7 @@ struct HabitRow: View {
                     }
                     Spacer()
                     Image(systemName: status.outcome == .success ? "checkmark.circle.fill" : status.outcome == .blocked ? "lock.circle" : "circle")
-                        .foregroundStyle(status.outcome == .success ? Palette.sage : .secondary)
+                        .foregroundStyle(status.outcome == .success ? Palette.done : Palette.muted)
                         .accessibilityLabel(status.outcome.rawValue)
                 }.padding(.vertical, 5)
             }
@@ -250,7 +252,7 @@ struct TaskRow: View {
         HStack {
             Button {
                 model.change { s in if let i = s.tasks.firstIndex(where: { $0.id == task.id }) { s.tasks[i].done.toggle() } }
-            } label: { Image(systemName: task.done ? "checkmark.circle.fill" : "circle").font(.title2).frame(width: 44, height: 44).contentShape(Rectangle()) }
+            } label: { Image(systemName: task.done ? "checkmark.circle.fill" : "circle").font(.title2).foregroundStyle(task.done ? Palette.done : Palette.muted).frame(width: 44, height: 44).contentShape(Rectangle()) }
                 .buttonStyle(.borderless).disabled(day > .today).accessibilityLabel(task.done ? "Mark incomplete" : "Complete task")
             NavigationLink { TaskDetail(taskID: task.id) } label: {
                 VStack(alignment: .leading) {
