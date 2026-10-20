@@ -63,3 +63,23 @@ Restored design delivered as **0.1.0 (6)**, app source `f8a05991842d6e7103887553
 Signed delivery run [39428455492](https://github.com/Maloletka777/LifePlanner/actions/runs/39428455492) explicitly passed Apple validation and upload. Separate App Store Connect API verification confirmed build 6 processing VALID, membership in the existing internal Owner Swift Testing group, and internalBuildState IN_BETA_TESTING. Builds 4 and 5 were intermediate uploads and were not assigned to that group. Public release was not performed.
 
 The later c295e4f commit changes only the UI-test scroll helper, not application code; its additional validation run is 39429839161. The delivered app's own complete validation above is green. Source/core/database schema were unchanged by this visual restoration. The owner reported smooth operation of the previous native build; physical acceptance of this new design, larger text, landscape and Reduce Transparency remain pending. This does not claim complete parity with every historical TypeScript feature or any new data-science result.
+
+## 20 October: correct the design reference to 0.5.9 build 40
+
+Owner rejected build 6 warm theme: it came from an older screenshot. Confirmed last published TypeScript source 62df10e, version 0.5.9/build 40. Swift app correction 5baa27c; candidate/test source 821576b. Restored graphite/system-dark palette, four tabs including Growth, stored day-block journal and compact plates. Block-specific creation preserves the selected block without inferring it from the time. Native interactions, existing Swift data and core remain intact. Added an explicit block creation/collapse/relaunch UI scenario (eight scenarios total). Validation run 39440890089 and signed-delivery tag testflight-20261020-v059-01 are pending; do not infer success or owner availability from these starts.
+
+Candidate correction 38b1dfe fixes UTF-8 punctuation in labels; the previous 821576b UI run exposed an accessibility lookup mismatch against the unchanged habit-editor label. Build 7 was uploaded/processed but deliberately not assigned. Replacement validation 39442408506 and signed run 39442418274 are pending.
+
+The explicit-block UI assertion exposed stale state captured by the boolean SwiftUI creation sheet: Morning creation could still use Anytime. Candidate 507d393 binds sheet presentation to an identifiable request carrying the block. Validation 39443649894 and signed run 39443662539 now check this correction. Build 8 is withheld from the owner group, as was build 7. Earlier screenshots are intermediate evidence only.
+
+## Verified corrected delivery: 0.1.0 (9), 20 October 2026
+
+Reference: final published TypeScript 0.5.9 / iOS build 40, commit 62df10e. Delivered Swift source **507d393a7de619c02d43b70c730a0e4797c39bb4**. [Validation run 39443649894](https://github.com/Maloletka777/LifePlanner/actions/runs/39443649894) completed successfully: **57 core/storage tests and all eight UI scenarios**, iPhone simulator build, macOS build and unsigned Release archive. The new explicit-block scenario passes creation in Morning, collapse/reopen and persistence after relaunch. UTF-8 checklist labels and existing completion workflows pass.
+
+[Signed run 39443662539](https://github.com/Maloletka777/LifePlanner/actions/runs/39443662539) explicitly returned VERIFY SUCCEEDED and UPLOAD SUCCEEDED. Artifact 12273744210 is signed-iphone-9. Separate App Store Connect API verification confirmed build 9 processing VALID, membership in the existing Owner Swift Testing internal group and internalBuildState IN_BETA_TESTING. Builds 7 and 8 were intermediate uploads and were not assigned. Build 6 remains historical and was rejected as the wrong design reference. No public App Store release.
+
+Final simulator screenshots from artifact 12276371792, iPhone 17 Pro/iOS 26.2, are images/design-build9-day-journal.png, design-build9-dark.png and design-build9-empty-day.png. Visually checked graphite light/true-black dark, four tabs, compact plates and correct Morning placement. Screenshots contain test records. Physical-device acceptance and larger text/landscape/Reduce Transparency checks remain pending.
+
+No Swift core, storage or schema changes from the pre-correction source. Existing native functional scope is retained; this is a native adaptation of the final visual language, not a claim of full historical TypeScript feature/animation parity. The custom calendar lens and Overview folder animation are not replicated. No datasets or predictive models were added.
+
+Rollback source/views archive: LivePlanner-Swift-before-v059-design.zip, SHA256 77977f01de464c9e21132142720cc1608887f481888bdc06010e5baf01ad81e1, integrity verified and excludes signing material.

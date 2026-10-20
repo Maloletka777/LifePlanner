@@ -1,15 +1,6 @@
-Signed delivery run: https://github.com/Maloletka777/LifePlanner/actions/runs/39428455492
-Source: f8a05991842d6e71038875536517c8582e87417a
-App: Live Planner Swift (6824491469), native bundle unchanged.
-Build: 0.1.0 (6). Archive/export and Apple validation/upload passed. Processing/group availability must be verified separately.
-2026-10-20T13:14:04.0903760Z ** ARCHIVE SUCCEEDED **
- 2026-10-20T13:14:07.4913100Z ** EXPORT SUCCEEDED **
- 2026-10-20T13:14:32.6831550Z   "success-message" : "No errors validating archive at '/Users/runner/work/LifePlanner/LifePlanner/native/DeviceExport/LivePlanner.ipa'.",
- 2026-10-20T13:14:32.6850310Z VERIFY SUCCEEDED with no errors
- 2026-10-20T13:14:53.8000970Z   "success-message" : "No errors uploading archive at '/Users/runner/work/LifePlanner/LifePlanner/native/DeviceExport/LivePlanner.ipa'.",
- 2026-10-20T13:14:53.8005620Z UPLOAD SUCCEEDED with no errors
- 2026-10-20T13:14:56.1361710Z SHA256 digest of uploaded artifact zip is 5e0677566d33ca7b95c03cf69cbe9520f72b7852abbb38697cbafa8fa2a320cb
- 2026-10-20T13:14:56.4077260Z Artifact signed-iphone-6.zip successfully finalized. Artifact ID 12266957468
- 2026-10-20T13:14:56.4089370Z Artifact signed-iphone-6 has been successfully uploaded! Final size is 3369993 bytes. Artifact ID is 12266957468
-
-Build 6: processing VALID; assigned to Owner Swift Testing; internalBuildState IN_BETA_TESTING (direct API verification 20 October 2026).
+Corrected design delivery: Swift 0.1.0 (9), source 507d393a7de619c02d43b70c730a0e4797c39bb4.
+Reference TypeScript 0.5.9/build 40, 62df10e.
+57 core/storage + 8 UI scenarios passed in run 39443649894.
+Signed run 39443662539: VERIFY and UPLOAD SUCCEEDED.
+Separate Apple API: processing VALID; owner internal group assigned; IN_BETA_TESTING.
+Builds 7/8 withheld; build 6 used the rejected older warm design.
