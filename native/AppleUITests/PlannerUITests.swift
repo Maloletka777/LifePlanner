@@ -179,7 +179,7 @@ final class PlannerUITests: XCTestCase {
         }
         XCTAssertTrue(closure.waitForExistence(timeout: 5))
         XCTAssertEqual(closure.value as? String, "1")
-        let line = app.textFields["Checklist â€” one item per line"]; reveal(line, in: app); line.tap(); line.typeText("UI checklist step")
+        let line = app.textFields["Checklist — one item per line"]; reveal(line, in: app); line.tap(); line.typeText("UI checklist step")
         app.buttons["Save"].tap()
         let habit = app.staticTexts["UI checklist habit"].firstMatch; reveal(habit, in: app); habit.tap()
         XCTAssertFalse(app.buttons["Success"].exists)

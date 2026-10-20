@@ -25,7 +25,7 @@ struct TaskEditor: View {
                 if timed { DatePicker("Time", selection: $planned, displayedComponents: .hourAndMinute) }
                 Toggle("Planned duration", isOn: $durationEnabled)
                 if durationEnabled { Stepper("\(duration) minutes", value: $duration, in: 1...1440) }
-                if taskID == nil { TextField("Checklist â€” one item per line", text: $checklistText, axis: .vertical) }
+                if taskID == nil { TextField("Checklist — one item per line", text: $checklistText, axis: .vertical) }
             }.plannerListSurface().navigationTitle(taskID == nil ? "New task" : "Edit task")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }

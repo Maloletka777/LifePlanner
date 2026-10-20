@@ -54,7 +54,7 @@ final class PlannerModel: ObservableObject {
     func enableNotifications() async {
         do {
             let allowed = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
-            reminderStatus = allowed ? "Enabled" : "Permission denied â€” enable in system settings"
+            reminderStatus = allowed ? "Enabled" : "Permission denied — enable in system settings"
             refreshReminders()
         } catch { self.error = error.localizedDescription }
     }
