@@ -6,8 +6,8 @@ struct TodayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedDate = Date()
     @State private var creatingHabit = false
-    @State private var creatingTask = false
-    @State private var taskBlock: DayBlock = .anytime
+    private struct TaskCreation: Identifiable { let id = UUID(); let block: DayBlock }
+    @State private var taskCreation: TaskCreation?
     @State private var journalOpen = false
     @State private var calendarOpen = false
     private var day: CalendarDay { CalendarDay(date: selectedDate) }
@@ -22,7 +22,7 @@ struct TodayView: View {
                 weekHeader
                 ScrollView {
                     VStack(spacing: 16) {
-                        DayAgenda(day: day, addTask: { block in taskBlock = block; creatingTask = true })
+                        DayAgenda(day: day, addTask: { block in taskCreation = TaskCreation(block: block) })
                         dailyFocus
                     }.padding(.horizontal, 16).padding(.bottom, 90)
                 }
@@ -33,7 +33,7 @@ struct TodayView: View {
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
                     Menu {
                         Button("New habit", systemImage: "leaf") { creatingHabit = true }
-                        Button("New task", systemImage: "checklist") { taskBlock = .anytime; creatingTask = true }
+                        Button("New task", systemImage: "checklist") { taskCreation = TaskCreation(block: .anytime) }
                     } label: {
                         Image(systemName: "plus").font(.title2.weight(.medium))
                             .foregroundStyle(Palette.sage).frame(width: 56, height: 56).plannerGlass()
@@ -60,7 +60,7 @@ struct TodayView: View {
                 }
             }
             .sheet(isPresented: $creatingHabit) { HabitEditor(day: day) }
-            .sheet(isPresented: $creatingTask) { TaskEditor(day: day, initialBlock: taskBlock) }
+            .sheet(item: $taskCreation) { request in TaskEditor(day: day, initialBlock: request.block) }
             .sheet(isPresented: $journalOpen) { JournalEditor(day: day) }
         }
     }
