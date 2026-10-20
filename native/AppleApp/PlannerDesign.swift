@@ -22,11 +22,11 @@ enum Palette {
     static let high = adaptive(0xA77F17, 0xEBB425)
     static func accent(_ key: String) -> Color {
         switch key {
-        case "blue": adaptive(0x4A7ACB, 0x87AFF1)
-        case "orange": adaptive(0xB76041, 0xDB947A)
-        case "purple": adaptive(0x9462B7, 0xC49BE0)
-        case "pink": adaptive(0x48878E, 0x80B9C0)
-        default: adaptive(0x488D62, 0x80BE96)
+        case "blue": adaptive(0x4A7ACB, 0x93B2E5)
+        case "orange": adaptive(0xB76041, 0xE79C82)
+        case "purple": adaptive(0x9462B7, 0xC69DE5)
+        case "pink": adaptive(0x48878E, 0x69C1CB)
+        default: adaptive(0x488D62, 0x6AC88E)
         }
     }
     private static func adaptive(_ light: UInt32, _ dark: UInt32) -> Color {

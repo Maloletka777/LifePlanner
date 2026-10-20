@@ -7,6 +7,7 @@ struct TodayView: View {
     @State private var selectedDate = Date()
     @State private var creatingHabit = false
     @State private var creatingTask = false
+    @State private var taskBlock: DayBlock = .anytime
     @State private var journalOpen = false
     @State private var calendarOpen = false
     private var day: CalendarDay { CalendarDay(date: selectedDate) }
@@ -21,15 +22,18 @@ struct TodayView: View {
                 weekHeader
                 ScrollView {
                     VStack(spacing: 16) {
-                        DayAgenda(day: day, addTask: { creatingTask = true })
+                        DayAgenda(day: day, addTask: { block in taskBlock = block; creatingTask = true })
                         dailyFocus
                     }.padding(.horizontal, 16).padding(.bottom, 90)
                 }
                 .scrollDismissesKeyboard(.interactively)
+                .simultaneousGesture(DragGesture(minimumDistance: 35).onEnded { value in
+                    if abs(value.translation.width) > abs(value.translation.height) * 1.5 { moveDay(value.translation.width < 0 ? 1 : -1) }
+                })
                 .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
                     Menu {
                         Button("New habit", systemImage: "leaf") { creatingHabit = true }
-                        Button("New task", systemImage: "checklist") { creatingTask = true }
+                        Button("New task", systemImage: "checklist") { taskBlock = .anytime; creatingTask = true }
                     } label: {
                         Image(systemName: "plus").font(.title2.weight(.medium))
                             .foregroundStyle(Palette.sage).frame(width: 56, height: 56).plannerGlass()
@@ -56,7 +60,7 @@ struct TodayView: View {
                 }
             }
             .sheet(isPresented: $creatingHabit) { HabitEditor(day: day) }
-            .sheet(isPresented: $creatingTask) { TaskEditor(day: day) }
+            .sheet(isPresented: $creatingTask) { TaskEditor(day: day, initialBlock: taskBlock) }
             .sheet(isPresented: $journalOpen) { JournalEditor(day: day) }
         }
     }
@@ -134,7 +138,7 @@ private struct DayAgenda: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var collapsed: Set<DayBlock> = []
     let day: CalendarDay
-    let addTask: () -> Void
+    let addTask: (DayBlock) -> Void
     private var entries: [Entry] {
         let habits: [Entry] = model.snapshot.habits.compactMap { habit in
             guard let config = habit.configuration(on: day), model.status(habit, day: day).outcome != .notScheduled else { return nil }
@@ -178,7 +182,7 @@ private struct DayAgenda: View {
                             }.frame(minHeight: 44)
                         }.accessibilityLabel(block.rawValue.capitalized)
                         Rectangle().fill(Palette.ink.opacity(0.09)).frame(height: 1)
-                        Button(action: addTask) { Image(systemName: "plus").frame(width: 44, height: 44) }
+                        Button { addTask(block) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
                             .accessibilityLabel("Add to " + block.rawValue)
                     }.padding(.top, 8)
                     if !collapsed.contains(block) {

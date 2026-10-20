@@ -6,6 +6,7 @@ struct TaskEditor: View {
     @Environment(\.dismiss) private var dismiss
     let day: CalendarDay
     var taskID: UUID? = nil
+    var initialBlock: DayBlock = .anytime
     @State private var task = PlannerTask(title: "", day: .today)
     @State private var date = Date()
     @State private var planned = Date()
@@ -24,7 +25,7 @@ struct TaskEditor: View {
                 if timed { DatePicker("Time", selection: $planned, displayedComponents: .hourAndMinute) }
                 Toggle("Planned duration", isOn: $durationEnabled)
                 if durationEnabled { Stepper("\(duration) minutes", value: $duration, in: 1...1440) }
-                if taskID == nil { TextField("Checklist — one item per line", text: $checklistText, axis: .vertical) }
+                if taskID == nil { TextField("Checklist â€” one item per line", text: $checklistText, axis: .vertical) }
             }.plannerListSurface().navigationTitle(taskID == nil ? "New task" : "Edit task")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
@@ -39,6 +40,7 @@ struct TaskEditor: View {
                     }.disabled(task.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) }
                 }.onAppear {
                     date = day.date(timezone: .current)
+                    if taskID == nil { task.block = initialBlock }
                     if let taskID, let existing = model.snapshot.tasks.first(where: { $0.id == taskID }) {
                         task = existing; date = task.day.date(timezone: .current)
                         timed = task.plannedMinute != nil; planned = timeDate(task.plannedMinute ?? 540)
