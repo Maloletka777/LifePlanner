@@ -50,9 +50,22 @@ final class PlannerUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Export backup"].waitForExistence(timeout: 5))
     }
     @MainActor private func reveal(_ element: XCUIElement, in app: XCUIApplication, upwards: Bool = true) {
-        for _ in 0..<10 {
+        for _ in 0..<16 {
             if element.exists && element.isHittable { return }
-            if upwards { app.swipeUp() } else { app.swipeDown() }
+            let scroll = app.scrollViews.firstMatch
+            let viewport: XCUIElement = scroll.exists ? scroll : app
+            let top = max(viewport.frame.minY, app.navigationBars.firstMatch.exists ? app.navigationBars.firstMatch.frame.maxY : 0)
+            let bottom = min(viewport.frame.maxY, app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : app.frame.maxY)
+            var moveUp = upwards
+            if element.exists {
+                if element.frame.minY < top { moveUp = false }
+                else if element.frame.maxY > bottom { moveUp = true }
+            }
+            // A full-screen flick can skip a compact hour card. Use a short,
+            // directed scroll and inspect its actual bounds again each time.
+            let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveUp ? 0.625 : 0.375))
+            let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveUp ? 0.375 : 0.625))
+            start.press(forDuration: 0.05, thenDragTo: end)
         }
         XCTAssertTrue(element.exists && element.isHittable)
     }
