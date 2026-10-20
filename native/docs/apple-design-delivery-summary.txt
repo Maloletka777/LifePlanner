@@ -1,0 +1,6 @@
+Corrected design delivery: Swift 0.1.0 (9), source 507d393a7de619c02d43b70c730a0e4797c39bb4.
+Reference TypeScript 0.5.9/build 40, 62df10e.
+57 core/storage + 8 UI scenarios passed in run 39443649894.
+Signed run 39443662539: VERIFY and UPLOAD SUCCEEDED.
+Separate Apple API: processing VALID; owner internal group assigned; IN_BETA_TESTING.
+Builds 7/8 withheld; build 6 used the rejected older warm design.

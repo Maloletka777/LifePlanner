@@ -1,0 +1,49 @@
+name: Manual signed iPhone archive
+on:
+  push:
+    tags: ['testflight-*', 'ios-archive-*']
+  workflow_dispatch:
+    inputs:
+      export_method:
+        description: Distribution profile type
+        type: choice
+        default: app-store-connect
+        options: [app-store-connect, release-testing]
+      upload_to_testflight:
+        description: Validate and upload to App Store Connect after export
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  archive:
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and export signed iPhone application
+        env:
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          EXPORT_METHOD: ${{ inputs.export_method || 'app-store-connect' }}
+        run: python3 native/tools/archive_iphone.py
+      - name: Validate and upload to App Store Connect
+        if: ${{ inputs.upload_to_testflight || startsWith(github.ref, 'refs/tags/testflight-') }}
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY_BASE64: ${{ secrets.ASC_PRIVATE_KEY_BASE64 }}
+        run: python3 native/tools/upload_iphone.py
+      - name: Save IPA and source evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-iphone-${{ github.run_number }}
+          path: |
+            native/DeviceExport/*.ipa
+            native/DeviceExport/build-evidence.json
+          if-no-files-found: error
+          retention-days: 7

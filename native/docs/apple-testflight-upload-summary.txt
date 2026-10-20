@@ -1,0 +1,13 @@
+Run: https://github.com/Maloletka777/LifePlanner/actions/runs/39248476290
+Source: 2d58491d71b6745b9eac0d98b5324e525f542a37
+App Store Connect app: 6824491469
+Result: Apple validation and upload succeeded. Processing and tester availability require separate UI verification.
+2026-10-19T12:00:20.5765270Z ** ARCHIVE SUCCEEDED **
+ 2026-10-19T12:00:24.1887690Z ** EXPORT SUCCEEDED **
+ 2026-10-19T12:00:59.0252840Z   "success-message" : "No errors validating archive at '/Users/runner/work/LifePlanner/LifePlanner/native/DeviceExport/LivePlanner.ipa'.",
+ 2026-10-19T12:00:59.0257290Z VERIFY SUCCEEDED with no errors
+ 2026-10-19T12:01:22.9940960Z   "success-message" : "No errors uploading archive at '/Users/runner/work/LifePlanner/LifePlanner/native/DeviceExport/LivePlanner.ipa'.",
+ 2026-10-19T12:01:23.0773500Z UPLOAD SUCCEEDED with no errors
+ 2026-10-19T12:01:25.8510590Z SHA256 digest of uploaded artifact zip is a7f1e4b6b181ab7db87fa2ef7e39924432bedf2def54abb68ebe22a55868328a
+ 2026-10-19T12:01:26.1308200Z Artifact signed-iphone-3.zip successfully finalized. Artifact ID 12183794809
+ 2026-10-19T12:01:26.1352750Z Artifact signed-iphone-3 has been successfully uploaded! Final size is 3257024 bytes. Artifact ID is 12183794809

@@ -1,0 +1,58 @@
+name: Native Swift validation
+on:
+  pull_request:
+    paths: ['native/**', '.github/workflows/native-swift.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: native
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: |
+          swift --version
+          xcodebuild -version
+      - name: Core and storage tests
+        run: swift test
+      - name: iPhone simulator build
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: macOS build
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlannerMac -configuration Debug -destination 'platform=macOS' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: iPhone Release archive without signing
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Release -destination 'generic/platform=iOS' -archivePath DevicePreflight.xcarchive CODE_SIGNING_ALLOWED=NO archive
+      - name: Choose iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os, re
+          devices=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))['devices']
+          runtimes=sorted((r for r in devices if 'iOS' in r), key=lambda r: tuple(int(n) for n in re.findall(r'\d+', r)), reverse=True)
+          phones=[d for runtime in runtimes for d in devices[runtime] if 'iPhone' in d['name']]
+          if not phones: raise SystemExit('No available iPhone simulator')
+          with open(os.environ['GITHUB_ENV'],'a') as f: f.write('SIMULATOR_ID='+phones[0]['udid']+'\n')
+          PY
+      - name: UI behaviour tests
+        run: xcodebuild -project LivePlanner.xcodeproj -scheme LivePlanner -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath DerivedData -resultBundlePath ui-tests.xcresult CODE_SIGNING_ALLOWED=NO test
+      - name: Export UI screenshots
+        if: always()
+        run: |
+          if [ -d ui-tests.xcresult ]; then
+            xcrun xcresulttool export attachments --path ui-tests.xcresult --output-path ui-screenshots
+          fi
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-apple-validation
+          path: |
+            native/ui-tests.xcresult
+            native/ui-screenshots
+            native/DerivedData/Logs
+          if-no-files-found: ignore

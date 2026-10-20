@@ -1,0 +1,88 @@
+## Verified corrected delivery: 0.1.0 (9), 20 October 2026
+
+Reference: final published TypeScript 0.5.9 / iOS build 40, commit 62df10e. Delivered Swift source **507d393a7de619c02d43b70c730a0e4797c39bb4**. [Validation run 39443649894](https://github.com/Maloletka777/LifePlanner/actions/runs/39443649894) completed successfully: **57 core/storage tests and all eight UI scenarios**, iPhone simulator build, macOS build and unsigned Release archive. The new explicit-block scenario passes creation in Morning, collapse/reopen and persistence after relaunch. UTF-8 checklist labels and existing completion workflows pass.
+
+[Signed run 39443662539](https://github.com/Maloletka777/LifePlanner/actions/runs/39443662539) explicitly returned VERIFY SUCCEEDED and UPLOAD SUCCEEDED. Artifact 12273744210 is signed-iphone-9. Separate App Store Connect API verification confirmed build 9 processing VALID, membership in the existing Owner Swift Testing internal group and internalBuildState IN_BETA_TESTING. Builds 7 and 8 were intermediate uploads and were not assigned. Build 6 remains historical and was rejected as the wrong design reference. No public App Store release.
+
+Final simulator screenshots from artifact 12276371792, iPhone 17 Pro/iOS 26.2, are images/design-build9-day-journal.png, design-build9-dark.png and design-build9-empty-day.png. Visually checked graphite light/true-black dark, four tabs, compact plates and correct Morning placement. Screenshots contain test records. Physical-device acceptance and larger text/landscape/Reduce Transparency checks remain pending.
+
+No Swift core, storage or schema changes from the pre-correction source. Existing native functional scope is retained; this is a native adaptation of the final visual language, not a claim of full historical TypeScript feature/animation parity. The custom calendar lens and Overview folder animation are not replicated. No datasets or predictive models were added.
+
+Rollback source/views archive: LivePlanner-Swift-before-v059-design.zip, SHA256 77977f01de464c9e21132142720cc1608887f481888bdc06010e5baf01ad81e1, integrity verified and excludes signing material.
+
+## Earlier records (superseded where noted)
+
+## Verified delivery — 20 October 2026
+
+Restored design delivered as **0.1.0 (6)**, app source `f8a05991842d6e71038875536517c8582e87417a`. Validation run [39428457294](https://github.com/Maloletka777/LifePlanner/actions/runs/39428457294) completed successfully: 57 core/storage tests, all seven UI scenarios, iPhone simulator and macOS builds, and unsigned Release archive. Screenshot evidence is from artifact 12268047156 on iPhone 17 Pro; see images/design-build6-empty-day.png, design-build6-dark.png and design-build6-timed-task.png.
+
+Signed delivery run [39428455492](https://github.com/Maloletka777/LifePlanner/actions/runs/39428455492) explicitly passed Apple validation and upload. Separate App Store Connect API verification confirmed build 6 processing VALID, membership in the existing internal Owner Swift Testing group, and internalBuildState IN_BETA_TESTING. Builds 4 and 5 were intermediate uploads and were not assigned to that group. Public release was not performed.
+
+The later c295e4f commit changes only the UI-test scroll helper, not application code; its additional validation run is 39429839161. The delivered app's own complete validation above is green. Source/core/database schema were unchanged by this visual restoration. The owner reported smooth operation of the previous native build; physical acceptance of this new design, larger text, landscape and Reduce Transparency remain pending. This does not claim complete parity with every historical TypeScript feature or any new data-science result.
+
+
+## Historical preparation and delivery
+
+# TestFlight upload preparation — 18 October 2026
+
+**Current outcome, 19 October 2026:** native version **0.1.0 (3)** was validated, uploaded, processed by Apple and assigned to the internal **Owner Swift Testing** group. The group's Builds page shows **1 Tester, 1 Build**, build **0.1.0 (3)**, status **Testing**, expiry in 90 days. Only the owner account is assigned. No public App Store release or external group was created. Installation and physical-device acceptance remain for the owner to perform. Earlier pending/blocker observations below are historical.
+
+## 19 October continuation
+
+The owner reported that Apple Support had cleared the agreement issue and authorised continuing. After renewed sign-in, the agreement warning disappeared and New App opened normally. Created the separate iOS App Store Connect record `6824491469`, name `Live Planner Swift`, bundle `com.olegkotikov.liveplanner.swift.dev`, primary language English (U.K.), SKU `liveplanner-swift-20261018`. TestFlight opens and currently reports No Builds. This supersedes the account blocker recorded below. Delivery and processing must still be verified.
+
+Created internal group `Owner Swift Testing`, with automatic distribution disabled, and added the account owner as its sole internal tester. Delivery run 39248028493 at source ef16b66e4e2b6e215e0483a011e31b5f2a1b2995 has passed signing/export and reached Apple validation/upload. These are intermediate observations; no processing success is inferred.
+
+That first delivery was rejected by Apple for missing supported interface orientations required for iPad multitasking. Although Actions reported success, altool returned JSON `product-errors` with a zero process exit status. Consequently, its uploadedToApple=true evidence is invalid and must not be used as proof of delivery. Added orientation declarations to the generated iOS plist settings and changed the uploader to reject JSON product-errors/unknown responses, requiring an explicit success-message. Checked success, rejection and unknown-response cases locally. Retrying in run 39248476290, source 2d58491d71b6745b9eac0d98b5324e525f542a37; result pending.
+
+Retry run 39248476290 succeeded: Apple's JSON explicitly reports no validation or upload errors, with VERIFY SUCCEEDED and UPLOAD SUCCEEDED. Downloaded artifact confirms version 0.1.0 (3), the native bundle and all four orientation entries as plist arrays (generic and iPad). Evidence now truthfully records uploadedToApple=true and processingVerified=false. See apple-testflight-upload-summary.txt. Apple processing and assignment to the internal group are still pending verification.
+
+Final UI verification: Processing completed; build 3 became Ready to Test. Added that exact build to Owner Swift Testing, then observed 0.1.0 (3) as Testing on the group's Builds page. This separately establishes processing and internal availability, which the upload command alone could not establish.
+
+The owner authorised uploading the native candidate to App Store Connect/TestFlight. This is not authorisation for public App Store release, purchases or accepting legal agreements on the owner's behalf.
+
+## Account observations
+
+- The existing Chrome session is signed in to Apple Developer and App Store Connect. Membership is active, with renewal shown in July 2027; no new subscription purchase is needed for the present preparation.
+- Existing app `6793826774` is LifePlanner (d2831f), with old Expo TestFlight versions. The visible 1.0.0 build is expired. No Swift build was found or uploaded.
+- Apple Developer displayed an updated Program License Agreement blocking certificates and App Store Connect resources. The agreement was opened without accepting it. The owner reported accepting it; subsequent fresh App Store Connect/Xcode Cloud pages still displayed the requirement. After the owner completed the agreement step, a fresh Xcode Cloud page no longer showed the block. Access to certificate creation was restored.
+- Xcode Cloud now offers an initial setup screen requiring Xcode. No cloud product or repository authorisation is configured there. With explicit owner approval, an Apple Distribution certificate was issued; its downloaded public key matches the prepared local private key and team. The P12 is encrypted and excluded from Git/review archives. API key and candidate app/profile setup are still in progress.
+- No P12, P8 or provisioning profile was found among the supplied project/research workspaces. This does not establish whether Expo/EAS or the owner retains signing materials elsewhere.
+
+## Build preparation
+
+Apple's current upload requirement is Xcode 26 or later with iOS 26 SDK or later. Earlier successful simulator checks used Xcode 16.4 and are not evidence of eligibility for upload. The workflows now explicitly select installed Xcode 26.3 and include an unsigned Release archive for a real iPhone destination before signing setup. In run 39137052992 (source 5881ab7), the package tests, iOS simulator build, macOS build and unsigned iPhone Release archive steps passed; all five UI tests also passed. See apple-release-preflight.txt. This successful unsigned archive is not a signed IPA or an upload.
+
+The original opaque 1024×1024 RGB project icon is copied unchanged into an iOS AppIcon asset catalogue and connected to the target. It remains the old prototype icon, not newly designed artwork. The candidate has no custom/non-exempt encryption implementation; its generated plist declares `ITSAppUsesNonExemptEncryption=NO`. Apple validation remains authoritative.
+
+Candidate bundle ID remains `com.olegkotikov.liveplanner.swift.dev`, separate from the old Expo app. A corresponding identifier, app record and signing profile must exist before uploading this candidate. The existing app is not silently repurposed.
+
+## Completion requirements
+
+1. Verify that Apple has removed the agreement block.
+2. Check the Xcode 26.3 package/build/Release archive results at the recorded source commit.
+3. Configure the candidate record and signing. Any new persistent credentials/repository access must be explicitly confirmed at setup; no secrets belong in chat or Git.
+4. Produce and validate a signed IPA, then upload through App Store Connect's supported delivery mechanism. A saved unsigned archive or an export-only workflow is not an upload.
+5. Verify Apple's processing result and build identity in TestFlight, add to the intended internal testing group and install on the owner's iPhone.
+
+Until those observable steps finish, status is **not uploaded**. The manual workflow now has an optional validation/upload step, default off. Its upload helper has only been syntax-checked and checked for refusal without credentials; delivery has not been executed.
+
+## Signing setup progress
+
+- The owner explicitly authorised creating the distribution certificate, a Developer-role App Store Connect API key, and storing signing/upload credentials in this repository's GitHub Secrets for building and TestFlight.
+- The candidate App ID and an active App Store provisioning profile named `LivePlanner Swift AppStore 2026-10-18` have been created. The downloaded profile's CMS signature and candidate bundle/team identity were verified locally and it was copied to the restricted signing folder.
+- After a separate explicit owner confirmation of the API internal-use terms, those terms were accepted and API access enabled. The `LivePlanner Swift CI` key was generated with Developer access. Its downloaded private key was validated and saved in the restricted local signing folder. No private key contents belong in this report or repository.
+- App Store Connect still displayed an agreement-update gate when attempting to create the candidate app record, including after the owner completed a fresh sign-in. The Developer account Agreements section explicitly shows the Program License Agreement issued 13 October and accepted 18 October 2026. These services currently disagree; the app record has not been created. Do not infer that another legal acceptance is needed or that the gate is cleared.
+- All seven repository signing/upload secrets were saved and their names verified in GitHub Settings with the owner's explicit authorisation. Their values were not exposed in source or reports.
+- Signed export run [39139994490](https://github.com/Maloletka777/LifePlanner/actions/runs/39139994490), source `c31e9b2bea22ab1cea824ec76a39019a41e3a202`, completed successfully on Xcode 26.3. Both archive and export succeeded. The export-only tag intentionally skipped upload. The downloaded artifact matches the runner's SHA256; the IPA identifies bundle `com.olegkotikov.liveplanner.swift.dev`, version 0.1.0, build 1, iPhoneOS 26.2 SDK, and contains the embedded profile and code-signature resources. Its evidence explicitly says uploadedToApple=false. See apple-signed-export-summary.txt.
+- Current blocker to delivery is the agreement gate in App Store Connect preventing creation of the separate candidate app record. No signed build has been uploaded or processed in TestFlight. A successful export does not establish Apple upload validation or device acceptance.
+- Follow-up diagnosis in Business confirmed `Free Apps Agreement: Active (New Agreement Available)`, while the Developer agreement history shows acceptance on 18 October. No Paid Apps Agreement was offered in that table. Prepared an unsent Apple Developer Support draft under Membership and Account > Agreements and Contracts, requesting reconciliation or identification of the exact outstanding agreement. Sending awaits the owner's explicit permission; no support case is claimed yet.
+- The owner then explicitly authorised sending that draft. Apple confirmed submission on 18 October 2026, case ID `103000730952`, and stated that it will review the message and reply. The account blocker is not yet resolved; no response or delivery completion is inferred from case creation.
+
+The signing workflow also supports explicit `testflight-*` tag pushes, which request signing and upload of that tagged revision, and `ios-archive-*` tags, which request export only. This avoids merging the unaccepted migration into the default branch merely to enable workflow_dispatch. Do not create a TestFlight tag before signing credentials and the candidate app record are ready.
+
+Sources checked:
+
+- [Apple upcoming upload requirements](https://developer.apple.com/news/upcoming-requirements/?id=02032026a)
+- [Apple upload builds](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/)
+- [GitHub macOS runner installed Xcode versions](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md)

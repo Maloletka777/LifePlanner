@@ -1,0 +1,316 @@
+Building for debugging...
+[Computing dependencies]
+[1 / 2] PlannerCore
+[3 / 4] PlannerCore
+[9 / 9] PlannerStorageTests-product
+[11 / 17] PlannerStorageTests-test-runner
+[13 / 19] PlannerStorageTests-test-runner
+[15 / 17] PlannerStorageTests-test-runner
+[18 / 18] PlannerStorageTests-test-runner
+[19 / 20] PlannerCoreTests-product
+[21 / 22] PlannerCoreTests-product
+[27 / 27] PlannerCoreTests-product
+[29 / 35] PlannerCoreTests-test-runner
+[31 / 37] PlannerCoreTests-test-runner
+[33 / 35] PlannerCoreTests-test-runner
+[36 / 36] PlannerCoreTests-test-runner
+Build complete! (4.69 secs)
+warning: unable to create symbolic link at C:\Users\Olejka\Documents\Codex\2026-10-18\LivePlanner-Swift\.build\debug: encountered an I/O error (code: 512) while reading C:\Users\Olejka\Documents\Codex\2026-10-18\LivePlanner-Swift\.build\debug
+Test Suite 'All tests' started at 2026-10-18 15:06:50.854
+
+Test Suite 'Debug-windows-x86_64.xctest' started at 2026-10-18 15:06:50.855
+
+Test Suite 'StorageTests' started at 2026-10-18 15:06:50.855
+
+Test Case 'StorageTests.testCorruptImportPreservesCurrentState' started at 2026-10-18 15:06:50.855
+
+Test Case 'StorageTests.testCorruptImportPreservesCurrentState' passed (0.024 seconds)
+
+Test Case 'StorageTests.testGarbageDatabaseFailsWithoutReset' started at 2026-10-18 15:06:50.880
+
+Test Case 'StorageTests.testGarbageDatabaseFailsWithoutReset' passed (0.005 seconds)
+
+Test Case 'StorageTests.testInvalidMutationNeverReachesDisk' started at 2026-10-18 15:06:50.885
+
+Test Case 'StorageTests.testInvalidMutationNeverReachesDisk' passed (0.02 seconds)
+
+Test Case 'StorageTests.testRestoreCreatesSafetyCopyAndRebasesRevision' started at 2026-10-18 15:06:50.905
+
+Test Case 'StorageTests.testRestoreCreatesSafetyCopyAndRebasesRevision' passed (0.032 seconds)
+
+Test Case 'StorageTests.testSaveReopenAndRevision' started at 2026-10-18 15:06:50.936
+
+Test Case 'StorageTests.testSaveReopenAndRevision' passed (0.024 seconds)
+
+Test Case 'StorageTests.testStaleSaveRejectedAcrossConnections' started at 2026-10-18 15:06:50.960
+
+Test Case 'StorageTests.testStaleSaveRejectedAcrossConnections' passed (0.154 seconds)
+
+Test Suite 'StorageTests' passed at 2026-10-18 15:06:51.114
+
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.258 (0.258) seconds
+
+Test Suite 'Debug-windows-x86_64.xctest' passed at 2026-10-18 15:06:51.114
+
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.258 (0.258) seconds
+
+Test Suite 'All tests' passed at 2026-10-18 15:06:51.114
+
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.258 (0.258) seconds
+
+Test Suite 'All tests' started at 2026-10-18 15:06:51.163
+
+Test Suite 'Debug-windows-x86_64.xctest' started at 2026-10-18 15:06:51.164
+
+Test Suite 'DiagnosisTests' started at 2026-10-18 15:06:51.164
+
+Test Case 'DiagnosisTests.testFrequencyCrowdingAndLatePositionModels' started at 2026-10-18 15:06:51.164
+
+Test Case 'DiagnosisTests.testFrequencyCrowdingAndLatePositionModels' passed (0.001 seconds)
+
+Test Case 'DiagnosisTests.testSparseAndSuccessfulHistoriesStayQuiet' started at 2026-10-18 15:06:51.165
+
+Test Case 'DiagnosisTests.testSparseAndSuccessfulHistoriesStayQuiet' passed (0.001 seconds)
+
+Test Case 'DiagnosisTests.testWeekdayPatternMatchesLegacyThreeWeekFixture' started at 2026-10-18 15:06:51.166
+
+Test Case 'DiagnosisTests.testWeekdayPatternMatchesLegacyThreeWeekFixture' passed (0.0 seconds)
+
+Test Case 'DiagnosisTests.testWrongBlockNeedsExplicitActualTimeAndRepeatedEvidence' started at 2026-10-18 15:06:51.166
+
+Test Case 'DiagnosisTests.testWrongBlockNeedsExplicitActualTimeAndRepeatedEvidence' passed (0.224 seconds)
+
+Test Suite 'DiagnosisTests' passed at 2026-10-18 15:06:51.390
+
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.225 (0.225) seconds
+
+Test Suite 'GrowthTests' started at 2026-10-18 15:06:51.390
+
+Test Case 'GrowthTests.testEarnedAwardsSurviveBreak' started at 2026-10-18 15:06:51.390
+
+Test Case 'GrowthTests.testEarnedAwardsSurviveBreak' passed (0.0 seconds)
+
+Test Case 'GrowthTests.testSilenceInterruptsWithoutScheduledMisses' started at 2026-10-18 15:06:51.390
+
+Test Case 'GrowthTests.testSilenceInterruptsWithoutScheduledMisses' passed (0.0 seconds)
+
+Test Case 'GrowthTests.testThirdMissBreaksAndReturnCanStrengthen' started at 2026-10-18 15:06:51.390
+
+Test Case 'GrowthTests.testThirdMissBreaksAndReturnCanStrengthen' passed (0.0 seconds)
+
+Test Case 'GrowthTests.testTwoMissesFreezeAndReturnContinues' started at 2026-10-18 15:06:51.390
+
+Test Case 'GrowthTests.testTwoMissesFreezeAndReturnContinues' passed (0.0 seconds)
+
+Test Suite 'GrowthTests' passed at 2026-10-18 15:06:51.391
+
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+
+Test Suite 'ParityTests' started at 2026-10-18 15:06:51.391
+
+Test Case 'ParityTests.testBackdatedConfigurationEditRejectsWithoutMutatingRecordedHistory' started at 2026-10-18 15:06:51.391
+
+Test Case 'ParityTests.testBackdatedConfigurationEditRejectsWithoutMutatingRecordedHistory' passed (0.001 seconds)
+
+Test Case 'ParityTests.testChecklistClosureRecordsAndReopeningVoidsWithoutErasure' started at 2026-10-18 15:06:51.391
+
+Test Case 'ParityTests.testChecklistClosureRecordsAndReopeningVoidsWithoutErasure' passed (0.106 seconds)
+
+Test Case 'ParityTests.testChecklistRemovalCannotEraseTickHistory' started at 2026-10-18 15:06:51.498
+
+Test Case 'ParityTests.testChecklistRemovalCannotEraseTickHistory' passed (0.0 seconds)
+
+Test Case 'ParityTests.testConversionExcludesConditionalChildrenAndSupportsSelection' started at 2026-10-18 15:06:51.498
+
+Test Case 'ParityTests.testConversionExcludesConditionalChildrenAndSupportsSelection' passed (0.0 seconds)
+
+Test Case 'ParityTests.testDateCorrectionMovesContributionAndKeepsChain' started at 2026-10-18 15:06:51.498
+
+Test Case 'ParityTests.testDateCorrectionMovesContributionAndKeepsChain' passed (0.001 seconds)
+
+Test Case 'ParityTests.testFocusConversionIsIdempotentAndRetainsProvenance' started at 2026-10-18 15:06:51.499
+
+Test Case 'ParityTests.testFocusConversionIsIdempotentAndRetainsProvenance' passed (0.0 seconds)
+
+Test Case 'ParityTests.testFocusCopyExtendPinSearchAndDuplicateProtection' started at 2026-10-18 15:06:51.499
+
+Test Case 'ParityTests.testFocusCopyExtendPinSearchAndDuplicateProtection' passed (0.001 seconds)
+
+Test Case 'ParityTests.testFutureAndUnavailableDateCorrectionRejected' started at 2026-10-18 15:06:51.500
+
+Test Case 'ParityTests.testFutureAndUnavailableDateCorrectionRejected' passed (0.0 seconds)
+
+Test Case 'ParityTests.testGrowingLimitStopAndDetails' started at 2026-10-18 15:06:51.500
+
+Test Case 'ParityTests.testGrowingLimitStopAndDetails' passed (0.001 seconds)
+
+Test Case 'ParityTests.testNestedRoutineDerivesCompletionWithoutParentFacts' started at 2026-10-18 15:06:51.501
+
+Test Case 'ParityTests.testNestedRoutineDerivesCompletionWithoutParentFacts' passed (0.0 seconds)
+
+Test Case 'ParityTests.testOldNativeBackupWithoutNewFieldsStillDecodes' started at 2026-10-18 15:06:51.501
+
+Test Case 'ParityTests.testOldNativeBackupWithoutNewFieldsStillDecodes' passed (0.001 seconds)
+
+Test Case 'ParityTests.testReparentPreservesEffectiveHistoryAndRejectsCycleAtomically' started at 2026-10-18 15:06:51.502
+
+Test Case 'ParityTests.testReparentPreservesEffectiveHistoryAndRejectsCycleAtomically' passed (0.0 seconds)
+
+Test Case 'ParityTests.testRoutineConversionPreviewProtectsEarlierObservations' started at 2026-10-18 15:06:51.502
+
+Test Case 'ParityTests.testRoutineConversionPreviewProtectsEarlierObservations' passed (0.0 seconds)
+
+Test Case 'ParityTests.testRoutineIgnoresStepNotScheduledAndDoesNotDoubleCountChildren' started at 2026-10-18 15:06:51.502
+
+Test Case 'ParityTests.testRoutineIgnoresStepNotScheduledAndDoesNotDoubleCountChildren' passed (0.0 seconds)
+
+Test Case 'ParityTests.testUnlinkAndArchiveKeepCorrectableDetachedContext' started at 2026-10-18 15:06:51.503
+
+Test Case 'ParityTests.testUnlinkAndArchiveKeepCorrectableDetachedContext' passed (0.001 seconds)
+
+Test Suite 'ParityTests' passed at 2026-10-18 15:06:51.504
+
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.113 (0.113) seconds
+
+Test Suite 'PlannerCoreTests' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testArchiveRestoreEffectiveDates' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testArchiveRestoreEffectiveDates' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testArchivedParentRemovesInheritedOccurrence' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testArchivedParentRemovesInheritedOccurrence' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testAsOfDoesNotUseLaterCorrection' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testAsOfDoesNotUseLaterCorrection' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testAtMostNeedsExplicitReportIncludingZero' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testAtMostNeedsExplicitReportIncludingZero' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testChecklistClosureAndRoundTrip' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testChecklistClosureAndRoundTrip' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testCivilArithmeticAcrossDST' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testCivilArithmeticAcrossDST' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testCorrectionVoidAndNoBranching' started at 2026-10-18 15:06:51.504
+
+Test Case 'PlannerCoreTests.testCorrectionVoidAndNoBranching' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testCounterRejectsFractionalAmountAndMismatchedType' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testCounterRejectsFractionalAmountAndMismatchedType' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testDecimalAccumulationIsExact' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testDecimalAccumulationIsExact' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testEveryNDaysDoesNotScheduleBeforeAnchor' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testEveryNDaysDoesNotScheduleBeforeAnchor' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testFlexiblePeriodBoundaries' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testFlexiblePeriodBoundaries' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testFlexibleTargetCountsDaysNotMeasurements' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testFlexibleTargetCountsDaysNotMeasurements' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testFollowUpBlockedUntilParentSucceeds' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testFollowUpBlockedUntilParentSucceeds' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testGrowthRestartClosesPreviousAttempt' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testGrowthRestartClosesPreviousAttempt' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testHistoricalEditsPreserveOldTarget' started at 2026-10-18 15:06:51.505
+
+Test Case 'PlannerCoreTests.testHistoricalEditsPreserveOldTarget' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testImportRejectsCorruptReferencesAndUnknownFormat' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testImportRejectsCorruptReferencesAndUnknownFormat' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testMissingIsNotExplicitFailureOrAvoidanceSuccess' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testMissingIsNotExplicitFailureOrAvoidanceSuccess' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testMonthlyLastDayClamp' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testMonthlyLastDayClamp' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testPrerequisiteBlocksParent' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testPrerequisiteBlocksParent' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testRecursiveDeletionRequiresExplicitChoice' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testRecursiveDeletionRequiresExplicitChoice' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testRejectsImpossibleDates' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testRejectsImpossibleDates' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testRelationshipCycleRejectedWithoutMutating' started at 2026-10-18 15:06:51.506
+
+Test Case 'PlannerCoreTests.testRelationshipCycleRejectedWithoutMutating' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testReminderPlanFutureSortedAndBudgeted' started at 2026-10-18 15:06:51.507
+
+Test Case 'PlannerCoreTests.testReminderPlanFutureSortedAndBudgeted' passed (0.005 seconds)
+
+Test Case 'PlannerCoreTests.testRoutineStepsKeepOwnScheduleAndDeriveParent' started at 2026-10-18 15:06:51.511
+
+Test Case 'PlannerCoreTests.testRoutineStepsKeepOwnScheduleAndDeriveParent' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testSkippedExcludedAndFutureRejected' started at 2026-10-18 15:06:51.512
+
+Test Case 'PlannerCoreTests.testSkippedExcludedAndFutureRejected' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testWeekdaySelectionAndWeeklySchedule' started at 2026-10-18 15:06:51.512
+
+Test Case 'PlannerCoreTests.testWeekdaySelectionAndWeeklySchedule' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testWeightedProgressUsesHistoricalImportance' started at 2026-10-18 15:06:51.512
+
+Test Case 'PlannerCoreTests.testWeightedProgressUsesHistoricalImportance' passed (0.0 seconds)
+
+Test Case 'PlannerCoreTests.testYearlyLeapDayClampAndInvalidMonthDay' started at 2026-10-18 15:06:51.512
+
+Test Case 'PlannerCoreTests.testYearlyLeapDayClampAndInvalidMonthDay' passed (0.0 seconds)
+
+Test Suite 'PlannerCoreTests' passed at 2026-10-18 15:06:51.512
+
+	 Executed 28 tests, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+
+Test Suite 'Debug-windows-x86_64.xctest' passed at 2026-10-18 15:06:51.512
+
+	 Executed 51 tests, with 0 failures (0 unexpected) in 0.347 (0.347) seconds
+
+Test Suite 'All tests' passed at 2026-10-18 15:06:51.512
+
+	 Executed 51 tests, with 0 failures (0 unexpected) in 0.347 (0.347) seconds
+
+◊ Test run started.
+
+→ Testing Library Version: 6.4.1 (804dc4530ef3666)
+
+→ Target Platform: x86_64-unknown-windows-msvc
+
+√ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+
+◊ Test run started.
+
+→ Testing Library Version: 6.4.1 (804dc4530ef3666)
+
+→ Target Platform: x86_64-unknown-windows-msvc
+
+√ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+

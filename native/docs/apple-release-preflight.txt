@@ -1,0 +1,19 @@
+Run: https://github.com/Maloletka777/LifePlanner/actions/runs/39137052992
+Application/project/workflow source: 5881ab7b751af419704b7bb913cfe27d7c4ec987
+Job: 117703582609
+Conclusion: success. Signing and upload were not part of this run.
+2026-10-18T14:40:47.7208290Z Xcode 26.3
+2026-10-18T14:41:18.1772210Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+2026-10-18T14:41:18.1785310Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+2026-10-18T14:41:18.1810350Z 	 Executed 15 tests, with 0 failures (0 unexpected) in 0.018 (0.020) seconds
+2026-10-18T14:41:18.1861040Z 	 Executed 28 tests, with 0 failures (0 unexpected) in 0.012 (0.016) seconds
+2026-10-18T14:41:18.1881890Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.018 (0.019) seconds
+2026-10-18T14:41:18.1883870Z 	 Executed 57 tests, with 0 failures (0 unexpected) in 0.053 (0.062) seconds
+2026-10-18T14:41:18.1889900Z 	 Executed 57 tests, with 0 failures (0 unexpected) in 0.053 (0.063) seconds
+2026-10-18T14:42:21.0896300Z ** BUILD SUCCEEDED **
+2026-10-18T14:43:06.5126960Z ** BUILD SUCCEEDED **
+2026-10-18T14:44:17.9659090Z ** ARCHIVE SUCCEEDED **
+2026-10-18T14:56:05.7866120Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 204.006 (204.014) seconds
+2026-10-18T14:56:05.8059910Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 204.006 (204.016) seconds
+2026-10-18T14:56:05.8184070Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 204.006 (204.021) seconds
+2026-10-18T14:56:07.2442180Z ** TEST SUCCEEDED **

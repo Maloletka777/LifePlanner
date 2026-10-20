@@ -1,0 +1,22 @@
+Run: https://github.com/Maloletka777/LifePlanner/actions/runs/39135718075
+Tested application/test source: ae789b20e27989b8377b04aa93dbb7c54b3ac13b
+Job: 117699699207
+Package: 57 passed. iOS and macOS builds passed. iPhone UI: 5 passed.
+2026-10-18T14:23:26.1540510Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+2026-10-18T14:23:26.1562600Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2026-10-18T14:23:26.1591840Z 	 Executed 15 tests, with 0 failures (0 unexpected) in 0.014 (0.014) seconds
+2026-10-18T14:23:26.1638100Z 	 Executed 28 tests, with 0 failures (0 unexpected) in 0.011 (0.012) seconds
+2026-10-18T14:23:26.1648250Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.018 (0.018) seconds
+2026-10-18T14:23:26.1649460Z 	 Executed 57 tests, with 0 failures (0 unexpected) in 0.049 (0.051) seconds
+2026-10-18T14:23:26.1650400Z 	 Executed 57 tests, with 0 failures (0 unexpected) in 0.049 (0.052) seconds
+2026-10-18T14:24:24.7185230Z ** BUILD SUCCEEDED **
+2026-10-18T14:25:00.8517560Z ** BUILD SUCCEEDED **
+2026-10-18T14:28:35.0850280Z Test Case '-[LivePlannerUITests.PlannerUITests testChecklistOwnsCompletionAndReopening]' passed (74.337 seconds).
+2026-10-18T14:29:08.7386820Z Test Case '-[LivePlannerUITests.PlannerUITests testCreateHabitAndRecordSuccess]' passed (33.682 seconds).
+2026-10-18T14:29:29.4012400Z Test Case '-[LivePlannerUITests.PlannerUITests testCreateTaskPersistsAcrossLaunch]' passed (20.677 seconds).
+2026-10-18T14:29:50.2847800Z Test Case '-[LivePlannerUITests.PlannerUITests testDailyFocusConvertsToPersistedTask]' passed (20.880 seconds).
+2026-10-18T14:30:45.8473270Z Test Case '-[LivePlannerUITests.PlannerUITests testRoutineParentIsDerivedFromItsStep]' passed (55.568 seconds).
+2026-10-18T14:30:45.8562750Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 205.145 (205.148) seconds
+2026-10-18T14:30:45.9728310Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 205.145 (205.149) seconds
+2026-10-18T14:30:46.1564900Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 205.145 (205.150) seconds
+2026-10-18T14:30:47.3232970Z ** TEST SUCCEEDED **
