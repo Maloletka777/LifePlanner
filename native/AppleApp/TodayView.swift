@@ -203,8 +203,8 @@ private struct DayAgenda: View {
                     }.padding(12).background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
                 }
             }
-            .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
-            .padding(.leading, 12).padding(.bottom, 8)
+            .frame(maxWidth: .infinity, minHeight: 14, alignment: .topLeading)
+            .padding(.leading, 12).padding(.bottom, 6)
             .overlay(alignment: .leading) { Rectangle().fill(Palette.line).frame(width: 1).accessibilityHidden(true) }
         }
         .padding(.leading, 8).padding(.trailing, 16)
