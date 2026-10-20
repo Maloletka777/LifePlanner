@@ -19,7 +19,7 @@ final class PlannerUITests: XCTestCase {
         timeline.name = "Restored timed task"; timeline.lifetime = .keepAlways; add(timeline)
         home(app); reveal(item, in: app)
         XCTAssertTrue(item.isHittable)
-        app.terminate(); app.launchArguments = ["-AppleInterfaceStyle", "Dark"]; app.launch()
+        app.terminate(); app.launchArguments = ["-ui-test-dark"]; app.launch()
         XCTAssertTrue(app.buttons["Add"].waitForExistence(timeout: 15))
         let dark = XCTAttachment(screenshot: app.screenshot())
         dark.name = "Restored calendar dark"; dark.lifetime = .keepAlways; add(dark)

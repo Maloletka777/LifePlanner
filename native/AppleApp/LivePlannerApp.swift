@@ -12,8 +12,16 @@ struct LivePlannerApp: App {
         WindowGroup {
             RootView().environmentObject(model)
                 .tint(Palette.sage)
+                .preferredColorScheme(testAppearance)
                 .onChange(of: phase) { _, phase in if phase == .active { model.reload() } }
         }
+    }
+    private var testAppearance: ColorScheme? {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-ui-test-dark") ? .dark : nil
+        #else
+        nil
+        #endif
     }
 }
 
