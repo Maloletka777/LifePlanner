@@ -1,6 +1,25 @@
 import XCTest
 
 final class PlannerUITests: XCTestCase {
+    @MainActor func testDayJournalPreservesExplicitBlock() {
+        let app = XCUIApplication(); home(app)
+        let addMorning = app.buttons["Add to morning"]
+        reveal(addMorning, in: app); addMorning.tap()
+        let title = app.textFields["Task title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5)); title.tap(); title.typeText("UI morning block task\n")
+        app.buttons["Save"].tap()
+        let item = app.descendants(matching: .any).matching(identifier: "UI morning block task").firstMatch
+        reveal(item, in: app); XCTAssertTrue(item.isHittable)
+        let morning = app.buttons["Morning"].firstMatch
+        reveal(morning, in: app); morning.tap()
+        XCTAssertFalse(item.exists)
+        morning.tap(); reveal(item, in: app); XCTAssertTrue(item.isHittable)
+        home(app); reveal(item, in: app); XCTAssertTrue(item.isHittable)
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Build 40 journal explicit morning block"; capture.lifetime = .keepAlways; add(capture)
+        app.tabBars.buttons["Growth"].tap()
+        XCTAssertTrue(app.navigationBars["Growing"].waitForExistence(timeout: 5))
+    }
     @MainActor func testTimedTaskRemainsReachableOnRestoredTimeline() {
         let app = XCUIApplication(); home(app)
         app.buttons["Add"].tap(); app.buttons["New task"].tap()
@@ -16,13 +35,13 @@ final class PlannerUITests: XCTestCase {
         let item = app.descendants(matching: .any).matching(identifier: "UI timeline task").firstMatch
         reveal(item, in: app)
         let timeline = XCTAttachment(screenshot: app.screenshot())
-        timeline.name = "Restored timed task"; timeline.lifetime = .keepAlways; add(timeline)
+        timeline.name = "Build 40 graphite scheduled task"; timeline.lifetime = .keepAlways; add(timeline)
         home(app); reveal(item, in: app)
         XCTAssertTrue(item.isHittable)
         app.terminate(); app.launchArguments = ["-ui-test-dark"]; app.launch()
         XCTAssertTrue(app.buttons["Add"].waitForExistence(timeout: 15))
         let dark = XCTAttachment(screenshot: app.screenshot())
-        dark.name = "Restored calendar dark"; dark.lifetime = .keepAlways; add(dark)
+        dark.name = "Build 40 graphite journal dark"; dark.lifetime = .keepAlways; add(dark)
     }
     @MainActor func testRestoredNavigationKeepsPlannerToolsReachable() {
         let app = XCUIApplication(); app.launch()
@@ -32,11 +51,11 @@ final class PlannerUITests: XCTestCase {
         XCTAssertTrue(app.tabBars.buttons["Overview"].exists)
         XCTAssertTrue(app.tabBars.buttons["More"].exists)
         let calendar = XCTAttachment(screenshot: app.screenshot())
-        calendar.name = "Restored calendar"; calendar.lifetime = .keepAlways; add(calendar)
+        calendar.name = "Build 40 graphite journal"; calendar.lifetime = .keepAlways; add(calendar)
         app.buttons["Previous day"].tap()
         XCTAssertTrue(app.staticTexts["Nothing planned for this day"].waitForExistence(timeout: 5))
         let empty = XCTAttachment(screenshot: app.screenshot())
-        empty.name = "Restored empty day"; empty.lifetime = .keepAlways; add(empty)
+        empty.name = "Build 40 graphite empty day"; empty.lifetime = .keepAlways; add(empty)
         app.buttons["Next day"].tap()
         app.tabBars.buttons["Overview"].tap()
         XCTAssertTrue(app.navigationBars["Overview"].waitForExistence(timeout: 5))

@@ -1,3 +1,15 @@
+# Corrected design reference: LifePlanner 0.5.9 / iOS build 40
+
+20 October 2026: the owner rejected Swift build 6 because it restored a much older screenshot. The authoritative reference is the last published TypeScript application, commit 62df10e (14 October), package/app version 0.5.9 and iOS build 40. README.md, app.json, active routes and src/ui/theme/color-themes.ts establish this independently. The warm screenshot is withdrawn as a design reference.
+
+The Swift correction uses the source graphite light/dark tokens, white/charcoal 12-point plates with 8-point gaps, solid category marks, independent completion green and priority colours. Tabs are Today, Growth, Overview, More. Today is a Day Journal grouped by stored Anytime/Morning/Afternoon/Evening, never assigned by clock time. Adding from a block presets that block in the native editor. Collapsible sections retain editing, checklists and history. The old full-day hour rail is removed. System TabView, navigation, sheets and date pickers retain native interaction and Liquid Glass where supported. Swift storage/core/schema are unchanged.
+
+This is a native adaptation of the active source. Source-specific custom lens/calendar and overview folder animations are not claimed to be reproduced. Existing native functional scope remains documented separately. No data-science work is added.
+
+Rollback before this correction: LivePlanner-Swift-before-v059-design.zip (views/tests/documentation; no signing keys). Validation/delivery evidence will follow the corrected candidate checks.
+
+## Superseded build 6 restoration record
+
 # Native design restoration â€” 20 October 2026
 
 The owner requested restoration of the earlier visual identity while retaining the Swift implementation and native Apple interactions. Reference: the owner's original calendar screenshot (sand ground, cream calendar, forest-green selection and Today / Overview / More navigation). The cleaned TypeScript source currently contains a later graphite theme; it is not treated as authoritative for the requested warm palette.
