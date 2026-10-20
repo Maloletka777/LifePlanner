@@ -1,6 +1,26 @@
 import XCTest
 
 final class PlannerUITests: XCTestCase {
+    @MainActor func testRestoredNavigationKeepsPlannerToolsReachable() {
+        let app = XCUIApplication(); app.launch()
+        XCTAssertTrue(app.buttons["Add"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.tabBars.buttons["Today"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Overview"].exists)
+        XCTAssertTrue(app.tabBars.buttons["More"].exists)
+        let calendar = XCTAttachment(screenshot: app.screenshot())
+        calendar.name = "Restored calendar"; calendar.lifetime = .keepAlways; add(calendar)
+        app.tabBars.buttons["Overview"].tap()
+        XCTAssertTrue(app.navigationBars["Overview"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["More"].tap()
+        app.buttons["Habits & routines"].tap()
+        XCTAssertTrue(app.buttons["Add habit"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["Growing"].tap()
+        XCTAssertTrue(app.navigationBars["Growing"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["Settings & backups"].tap()
+        XCTAssertTrue(app.buttons["Export backup"].waitForExistence(timeout: 5))
+    }
     @MainActor private func reveal(_ element: XCUIElement, in app: XCUIApplication, upwards: Bool = true) {
         for _ in 0..<10 {
             if element.exists && element.isHittable { return }

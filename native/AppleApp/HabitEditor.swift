@@ -148,7 +148,7 @@ struct HabitsView: View {
     @State private var query = ""
     @State private var create = false
     var body: some View {
-        NavigationStack {
+        Group {
             List {
                 Toggle("Show archived", isOn: $archive)
                 ForEach(model.snapshot.habits.filter {
@@ -157,7 +157,7 @@ struct HabitsView: View {
                     let date = habit.configuration(on: .today) == nil ? habit.configurations[0].effective.start : .today
                     HabitRow(habit: habit, day: date)
                 }
-            }.navigationTitle(archive ? "Archived habits" : "Your habits")
+            }.plannerListSurface().navigationTitle(archive ? "Archived habits" : "Your habits")
                 .searchable(text: $query)
                 .toolbar { Button("Add habit", systemImage: "plus") { create = true } }
                 .sheet(isPresented: $create) { HabitEditor(day: .today) }

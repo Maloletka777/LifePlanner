@@ -10,7 +10,7 @@ struct GrowthView: View {
     @State private var editingAttemptID: UUID?
     @State private var reviewingHabitID: UUID?
     var body: some View {
-        NavigationStack {
+        Group {
             List {
                 Section {
                     Text("Return gently").font(.title2.weight(.semibold))
@@ -53,7 +53,7 @@ struct GrowthView: View {
                         Button(attempts.isEmpty ? "Start an attempt" : "Start a new attempt") { editingAttemptID = nil; selectedID = habit.id; cue = ""; enjoyment = "" }
                     }
                 }
-            }.navigationTitle("Growing")
+            }.plannerListSurface().navigationTitle("Growing")
                 .sheet(isPresented: Binding(get: { reviewingHabitID != nil }, set: { if !$0 { reviewingHabitID = nil } })) {
                     if let reviewingHabitID { HabitEditor(day: .today, habitID: reviewingHabitID) }
                 }
@@ -72,7 +72,7 @@ struct GrowthView: View {
                                     else { try state.restartGrowth(habitID: selectedID, on: .today, cue: cue, enjoyment: enjoyment) }
                                 }) { self.selectedID = nil; editingAttemptID = nil }
                             }
-                        }.navigationTitle("A new start").toolbar { Button("Cancel") { selectedID = nil } }
+                        }.plannerListSurface().navigationTitle("A new start").toolbar { Button("Cancel") { selectedID = nil } }
                     }.frame(minWidth: 300, minHeight: 300)
                 }
         }
@@ -104,7 +104,7 @@ struct InsightsView: View {
         }
     }
     var body: some View {
-        NavigationStack {
+        Group {
             List {
                 Section("Last 30 days") {
                     Chart(metrics) { metric in
@@ -119,7 +119,7 @@ struct InsightsView: View {
                     Label("Prediction is not enabled", systemImage: "flask")
                     Text("External datasets have not been loaded into this app. A later study will evaluate recovery-history features against simple frequency and streak baselines.")
                 }
-            }.navigationTitle("Insights")
+            }.plannerListSurface().navigationTitle("Overview")
         }
     }
 }

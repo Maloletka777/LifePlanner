@@ -3,66 +3,50 @@ import PlannerCore
 
 struct TodayView: View {
     @EnvironmentObject private var model: PlannerModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedDate = Date()
     @State private var creatingHabit = false
     @State private var creatingTask = false
     @State private var journalOpen = false
     private var day: CalendarDay { CalendarDay(date: selectedDate) }
+    private var week: [Date] {
+        var calendar = Calendar.current; calendar.firstWeekday = 2
+        let start = calendar.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
+        return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: start) }
+    }
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    DatePicker("Your day", selection: $selectedDate, displayedComponents: .date)
-                    HStack {
-                        Button { moveDay(-1) } label: { Image(systemName: "chevron.left") }.accessibilityLabel("Previous day")
-                        Spacer()
-                        Button("Today") { selectedDate = Date() }
-                        Spacer()
-                        Button { moveDay(1) } label: { Image(systemName: "chevron.right") }.accessibilityLabel("Next day")
-                    }.buttonStyle(.borderless)
+            VStack(spacing: 0) {
+                weekHeader
+                ScrollView {
+                    VStack(spacing: 16) {
+                        DayAgenda(day: day, addTask: { creatingTask = true })
+                        dailyFocus
+                    }.padding(.horizontal, 16).padding(.bottom, 90)
                 }
-                Section {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(day == .today ? "Make room for what matters" : "Your plan, one day at a time").font(.title2.weight(.semibold))
-                        if let progress = try? model.snapshot.progress(on: day) {
-                            ProgressView(value: NSDecimalNumber(decimal: progress).doubleValue)
-                            Text("\(NSDecimalNumber(decimal: progress * 100).intValue)% of scheduled progress").font(.caption).foregroundStyle(.secondary)
-                        } else { Text("No eligible items for this day").foregroundStyle(.secondary) }
-                        let entry = model.snapshot.journal.first { $0.day == day }
-                        if let focus = entry?.focus, !focus.isEmpty { Text(focus).font(.headline) }
-                    }.padding(.vertical, 8)
-                    Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
-                    NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
-                }
-                let focusCards = model.snapshot.focusEntries.filter { $0.isVisible(on: day) }
-                if !focusCards.isEmpty {
-                    Section("Daily Focus") {
-                        ForEach(focusCards) { focus in NavigationLink(focus.title) { FocusDetail(focusID: focus.id) } }
+                .scrollDismissesKeyboard(.interactively)
+                .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
+                    Menu {
+                        Button("New habit", systemImage: "leaf") { creatingHabit = true }
+                        Button("New task", systemImage: "checklist") { creatingTask = true }
+                    } label: {
+                        Image(systemName: "plus").font(.title2.weight(.medium))
+                            .foregroundStyle(Palette.sage).frame(width: 56, height: 56).plannerGlass()
                     }
-                }
-                ForEach(DayBlock.allCases, id: \.self) { block in
-                    let habits = model.snapshot.habits.filter {
-                        guard let config = $0.configuration(on: day), config.block == block else { return false }
-                        return model.status($0, day: day).outcome != .notScheduled
-                    }.sorted { ($0.configuration(on: day)?.plannedMinute ?? 1440) < ($1.configuration(on: day)?.plannedMinute ?? 1440) }
-                    let tasks = model.snapshot.tasks.filter { $0.day == day && !$0.archived && $0.block == block }
-                        .sorted { ($0.plannedMinute ?? 1440) < ($1.plannedMinute ?? 1440) }
-                    if !habits.isEmpty || !tasks.isEmpty {
-                        Section(block.rawValue.capitalized) {
-                            ForEach(habits) { habit in HabitRow(habit: habit, day: day) }
-                            ForEach(tasks) { task in TaskRow(task: task, day: day) }
-                        }
-                    }
-                }
-                if model.snapshot.habits.isEmpty && model.snapshot.tasks.isEmpty {
-                    ContentUnavailableView("A clear start", systemImage: "leaf", description: Text("Add a habit or a one-day task to shape your day."))
+                    .accessibilityLabel("Add")
+                    .padding(.trailing, 20).padding(.bottom, 10)
                 }
             }
-            .navigationTitle("Live Planner")
+            .background(Palette.background)
+            .foregroundStyle(Palette.ink)
+            .navigationTitle(selectedDate.formatted(.dateTime.month(.wide).year()))
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Menu { Button("New habit", systemImage: "leaf") { creatingHabit = true }; Button("New task", systemImage: "checklist") { creatingTask = true } }
-                    label: { Label("Add", systemImage: "plus") }
+                    DatePicker("Your day", selection: $selectedDate, displayedComponents: .date)
+                        .labelsHidden().accessibilityLabel("Choose date")
                 }
             }
             .sheet(isPresented: $creatingHabit) { HabitEditor(day: day) }
@@ -70,7 +54,140 @@ struct TodayView: View {
             .sheet(isPresented: $journalOpen) { JournalEditor(day: day) }
         }
     }
-    private func moveDay(_ offset: Int) { selectedDate = Calendar.current.date(byAdding: .day, value: offset, to: selectedDate) ?? selectedDate }
+    private var weekHeader: some View {
+        VStack(spacing: 6) {
+            HStack {
+                Button { moveDay(-1) } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }
+                    .accessibilityLabel("Previous day")
+                Spacer()
+                Button("Today") { select(Date()) }.font(.subheadline.weight(.semibold))
+                Spacer()
+                Button { moveDay(1) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }
+                    .accessibilityLabel("Next day")
+            }
+            HStack(spacing: 0) {
+                ForEach(week, id: \.self) { date in
+                    let selected = Calendar.current.isDate(date, inSameDayAs: selectedDate)
+                    Button { select(date) } label: {
+                        VStack(spacing: 6) {
+                            Text(date.formatted(.dateTime.weekday(.narrow))).font(.caption.weight(.semibold)).foregroundStyle(Palette.muted)
+                            Text(date.formatted(.dateTime.day())).font(.body.weight(.bold))
+                                .frame(minWidth: 38, minHeight: 38)
+                                .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
+                                .background { if selected { Circle().fill(Palette.sage) } }
+                        }.frame(maxWidth: .infinity).padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
+                    .accessibilityAddTraits(selected ? .isSelected : [])
+                }
+            }
+        }
+        .padding(.horizontal, 16).padding(.bottom, 14)
+        .background(Palette.header)
+    }
+    private var dailyFocus: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label("Daily Focus", systemImage: "square.and.pencil").font(.headline)
+            if let progress = try? model.snapshot.progress(on: day) {
+                ProgressView(value: NSDecimalNumber(decimal: progress).doubleValue)
+                Text("\(NSDecimalNumber(decimal: progress * 100).intValue)% of scheduled progress")
+                    .font(.caption).foregroundStyle(Palette.muted)
+            }
+            if let entry = model.snapshot.journal.first(where: { $0.day == day }), !entry.focus.isEmpty {
+                Text(entry.focus).font(.body.weight(.medium))
+            }
+            Button("Daily focus & notes", systemImage: "square.and.pencil") { journalOpen = true }
+            NavigationLink("Daily Focus cards & history") { FocusHistoryView(day: day) }
+            ForEach(model.snapshot.focusEntries.filter { $0.isVisible(on: day) }) { focus in
+                NavigationLink(focus.title) { FocusDetail(focusID: focus.id) }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading).padding(20)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 24))
+    }
+    private func select(_ date: Date) {
+        withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { selectedDate = date }
+    }
+    private func moveDay(_ offset: Int) {
+        select(Calendar.current.date(byAdding: .day, value: offset, to: selectedDate) ?? selectedDate)
+    }
+}
+
+private struct DayAgenda: View {
+    @EnvironmentObject private var model: PlannerModel
+    let day: CalendarDay
+    let addTask: () -> Void
+    private var habits: [Habit] {
+        model.snapshot.habits.filter { $0.configuration(on: day) != nil && model.status($0, day: day).outcome != .notScheduled }
+    }
+    private var tasks: [PlannerTask] { model.snapshot.tasks.filter { $0.day == day && !$0.archived } }
+    private var untimedHabits: [Habit] { habits.filter { $0.configuration(on: day)?.plannedMinute == nil } }
+    private var untimedTasks: [PlannerTask] { tasks.filter { $0.plannedMinute == nil } }
+    private var hasTimedItems: Bool {
+        habits.contains { $0.configuration(on: day)?.plannedMinute != nil } || tasks.contains { $0.plannedMinute != nil }
+    }
+    var body: some View {
+        VStack(spacing: 0) {
+            if !untimedHabits.isEmpty || !untimedTasks.isEmpty {
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Anytime").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.muted)
+                    ForEach(untimedHabits) { habit in HabitRow(habit: habit, day: day) }
+                    ForEach(untimedTasks) { task in TaskRow(task: task, day: day) }
+                }.padding(20)
+                Divider().overlay(Palette.line)
+            }
+            TimelineView(.periodic(from: .now, by: 60)) { context in
+                VStack(spacing: 0) {
+                    ForEach(0..<24, id: \.self) { hour in hourRow(hour, now: context.date) }
+                    HStack { Text("24:00").font(.caption.monospacedDigit()).frame(width: 52); Spacer() }
+                        .foregroundStyle(Palette.muted).padding(.leading, 8).padding(.bottom, 18)
+                }
+                .overlay {
+                    if !hasTimedItems {
+                        VStack(spacing: 16) {
+                            Text("Nothing planned for this day").font(.headline).foregroundStyle(Palette.muted)
+                            Button("Add a task", systemImage: "plus", action: addTask).font(.headline)
+                        }.padding(.leading, 56).padding(.horizontal, 20)
+                    }
+                }
+            }
+        }
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 28))
+        .padding(.top, 16)
+        .buttonStyle(.plain)
+    }
+    private func hourRow(_ hour: Int, now: Date) -> some View {
+        let hourHabits = habits.filter { ($0.configuration(on: day)?.plannedMinute ?? -60) / 60 == hour }
+            .sorted { ($0.configuration(on: day)?.plannedMinute ?? 0) < ($1.configuration(on: day)?.plannedMinute ?? 0) }
+        let hourTasks = tasks.filter { ($0.plannedMinute ?? -60) / 60 == hour }
+            .sorted { ($0.plannedMinute ?? 0) < ($1.plannedMinute ?? 0) }
+        let isCurrent = day == CalendarDay(date: now) && Calendar.current.component(.hour, from: now) == hour
+        return HStack(alignment: .top, spacing: 10) {
+            VStack(spacing: 0) {
+                Text(isCurrent ? now.formatted(date: .omitted, time: .shortened) : timeLabel(hour * 60))
+                    .font(.caption2.weight(isCurrent ? .bold : .medium).monospacedDigit())
+                    .foregroundStyle(isCurrent ? Palette.sage : Palette.muted)
+                    .opacity(hour % 4 == 0 || isCurrent || !hourHabits.isEmpty || !hourTasks.isEmpty ? 1 : 0)
+                    .frame(width: 52, alignment: .trailing)
+            }
+            VStack(spacing: 8) {
+                if isCurrent { Rectangle().fill(Palette.sage.opacity(0.6)).frame(height: 1).accessibilityHidden(true) }
+                ForEach(hourHabits) { habit in
+                    HabitRow(habit: habit, day: day).padding(12)
+                        .background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
+                }
+                ForEach(hourTasks) { task in
+                    TaskRow(task: task, day: day).padding(12)
+                        .background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
+                }
+            }
+            .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
+            .padding(.leading, 12).padding(.bottom, 8)
+            .overlay(alignment: .leading) { Rectangle().fill(Palette.line).frame(width: 1).accessibilityHidden(true) }
+        }
+        .padding(.leading, 8).padding(.trailing, 16)
+    }
 }
 
 struct HabitRow: View {
@@ -137,7 +254,7 @@ struct JournalEditor: View {
             Form {
                 Section("One thing to focus on") { TextField("Daily focus", text: $focus, axis: .vertical) }
                 Section("Journal") { TextEditor(text: $note).frame(minHeight: 180).accessibilityLabel("Journal notes") }
-            }.navigationTitle(day.description)
+            }.plannerListSurface().navigationTitle(day.description)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                     ToolbarItem(placement: .confirmationAction) { Button("Save") {

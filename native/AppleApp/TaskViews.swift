@@ -25,7 +25,7 @@ struct TaskEditor: View {
                 Toggle("Planned duration", isOn: $durationEnabled)
                 if durationEnabled { Stepper("\(duration) minutes", value: $duration, in: 1...1440) }
                 if taskID == nil { TextField("Checklist — one item per line", text: $checklistText, axis: .vertical) }
-            }.navigationTitle(taskID == nil ? "New task" : "Edit task")
+            }.plannerListSurface().navigationTitle(taskID == nil ? "New task" : "Edit task")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                     ToolbarItem(placement: .confirmationAction) { Button("Save") {
@@ -86,7 +86,7 @@ struct TaskDetail: View {
                     }
                     Button("Permanently delete", role: .destructive) { deleting = true }
                 }
-            }.navigationTitle("Task").toolbar { Button("Edit") { editing = true } }
+            }.plannerListSurface().navigationTitle("Task").toolbar { Button("Edit") { editing = true } }
                 .sheet(isPresented: $editing) { TaskEditor(day: task.day, taskID: taskID) }
                 .confirmationDialog("Delete this task permanently?", isPresented: $deleting, titleVisibility: .visible) {
                     Button("Delete", role: .destructive) { if model.change({ $0.tasks.removeAll { $0.id == taskID } }) { dismiss() } }

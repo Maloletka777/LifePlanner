@@ -18,7 +18,7 @@ struct FocusHistoryView: View {
                 ForEach(model.snapshot.searchFocus(query, includeArchived: archived)) { focus in focusLink(focus) }
             }
             if model.snapshot.focusEntries.isEmpty { Text("A new day starts empty. Your previous focus stays in history.").foregroundStyle(.secondary) }
-        }.navigationTitle("Daily Focus").searchable(text: $query)
+        }.plannerListSurface().navigationTitle("Daily Focus").searchable(text: $query)
             .toolbar { Button("New focus", systemImage: "plus") { creating = true } }
             .sheet(isPresented: $creating) { FocusEditor(day: day) }
     }
@@ -47,7 +47,7 @@ struct FocusEditor: View {
                 TextField("Context & intentions", text: $focus.body, axis: .vertical)
                 TextField("Checklist — one item per line", text: $checklist, axis: .vertical)
                 Text("One active focus per date. Pinning makes the same card visible across a period.").font(.caption)
-            }.navigationTitle(focusID == nil ? "New focus" : "Edit focus")
+            }.plannerListSurface().navigationTitle(focusID == nil ? "New focus" : "Edit focus")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                     ToolbarItem(placement: .confirmationAction) { Button("Save focus") {
@@ -127,7 +127,7 @@ struct FocusDetail: View {
                         model.change { s in if let i = s.focusEntries.firstIndex(where: { $0.id == focusID }) { s.focusEntries[i].archived.toggle() } }
                     }
                 }
-            }.navigationTitle("Daily Focus").toolbar { Button("Edit") { editing = true } }
+            }.plannerListSurface().navigationTitle("Daily Focus").toolbar { Button("Edit") { editing = true } }
                 .sheet(isPresented: $editing) { FocusEditor(day: focus.day, focusID: focusID) }
                 .onAppear {
                     targetDate = (try? focus.day.adding(days: 1))?.date(timezone: .current) ?? Date()

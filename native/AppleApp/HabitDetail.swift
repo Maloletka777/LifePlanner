@@ -156,7 +156,7 @@ struct HabitDetail: View {
                                 let targetDay = CalendarDay(date: correctionDate)
                                 if model.change({ try $0.record(habitID: habitID, on: targetDay, value: value, supersedes: correcting, note: "Observation correction", occurrenceMinute: correctionHasTime ? minuteOfDay(correctionTime) : nil) }) { correcting = nil; selectedDate = correctionDate }
                             }
-                        }.navigationTitle("Correct record").toolbar { Button("Cancel") { correcting = nil } }
+                        }.plannerListSurface().navigationTitle("Correct record").toolbar { Button("Cancel") { correcting = nil } }
                     }.frame(minWidth: 300, minHeight: 250)
                 }
                 .confirmationDialog("Permanently delete this habit, all descendants, observations and reminders?", isPresented: $deleting, titleVisibility: .visible) {
@@ -207,7 +207,7 @@ struct RelationshipEditor: View {
                         else { try s.addRelationship(Relationship(parentID: parentID, childID: childID, kind: kind, from: day, order: order)) }
                     }) { dismiss() }
                 }.disabled(childID == nil)
-            }.navigationTitle("Related habit").toolbar { Button("Cancel") { dismiss() } }
+            }.plannerListSurface().navigationTitle("Related habit").toolbar { Button("Cancel") { dismiss() } }
         }.frame(minWidth: 320, minHeight: 350)
     }
 }

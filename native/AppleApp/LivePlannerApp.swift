@@ -17,13 +17,6 @@ struct LivePlannerApp: App {
     }
 }
 
-enum Palette {
-    static let sage = Color(red: 0.27, green: 0.43, blue: 0.35)
-    static func accent(_ key: String) -> Color {
-        switch key { case "blue": .blue; case "orange": .orange; case "purple": .purple; case "pink": .pink; default: sage }
-    }
-}
-
 @MainActor
 final class PlannerModel: ObservableObject {
     @Published private(set) var snapshot = PlannerSnapshot()
@@ -129,11 +122,9 @@ struct RootView: View {
         Group {
             if model.ready {
                 TabView {
-                    TodayView().tabItem { Label("Today", systemImage: "sun.max") }
-                    HabitsView().tabItem { Label("Habits", systemImage: "leaf") }
-                    GrowthView().tabItem { Label("Growing", systemImage: "chart.line.uptrend.xyaxis") }
-                    InsightsView().tabItem { Label("Insights", systemImage: "chart.bar") }
-                    SettingsView().tabItem { Label("Settings", systemImage: "gearshape") }
+                    TodayView().tabItem { Label("Today", systemImage: "rectangle.split.2x1.fill") }
+                    NavigationStack { InsightsView() }.tabItem { Label("Overview", systemImage: "chart.bar") }
+                    MoreView().tabItem { Label("More", systemImage: "ellipsis.circle") }
                 }
             } else {
                 ContentUnavailableView {

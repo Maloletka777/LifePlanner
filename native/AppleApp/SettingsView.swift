@@ -9,7 +9,7 @@ struct SettingsView: View {
     @State private var pendingImport: Data?
     @State private var confirmRestore = false
     var body: some View {
-        NavigationStack {
+        Group {
             Form {
                 Section("Progress") {
                     Toggle("Weight habits by importance", isOn: Binding(get: { model.snapshot.weightedProgress }, set: { value in model.change { $0.weightedProgress = value } }))
@@ -31,14 +31,14 @@ struct SettingsView: View {
                     Text("Native JSON backups only. Restore validates the file and saves a safety copy of your current data first. The Expo database is a different format and is not automatically imported.").font(.caption)
                     LabeledContent("Database revision", value: "\(model.snapshot.revision)")
                     NavigationLink("Archived tasks") {
-                        List(model.snapshot.tasks.filter(\.archived)) { task in NavigationLink(task.title) { TaskDetail(taskID: task.id) } }.navigationTitle("Archived tasks")
+                        List(model.snapshot.tasks.filter(\.archived)) { task in NavigationLink(task.title) { TaskDetail(taskID: task.id) } }.plannerListSurface().navigationTitle("Archived tasks")
                     }
                 }
                 Section("About") {
                     Text("Live Planner · Swift migration")
                     Text("Local storage. No account, backend or telemetry. Native rewrite prepared with AI assistance. Apple Watch, HealthKit, cloud sync and prediction are future work.").font(.caption)
                 }
-            }.navigationTitle("Settings")
+            }.plannerListSurface().navigationTitle("Settings")
                 .fileExporter(isPresented: $exporting, document: backup, contentType: .json, defaultFilename: "LivePlanner-\(CalendarDay.today).json") { result in
                     if case .failure(let error) = result { model.error = error.localizedDescription }
                 }

@@ -21,6 +21,6 @@ struct RoutineConversionView: View {
             }
             Button("Convert to routine") { completed = model.change { try $0.convertToRoutine(parentID: parentID, from: date) } }.disabled(!preview.allowed || completed)
             if completed { Label("Routine converted", systemImage: "checkmark.circle") }
-        }.navigationTitle("Routine conversion").onAppear { effectiveDate = day.date(timezone: .current) }
+        }.plannerListSurface().navigationTitle("Routine conversion").onAppear { effectiveDate = day.date(timezone: .current) }
     }
 }
