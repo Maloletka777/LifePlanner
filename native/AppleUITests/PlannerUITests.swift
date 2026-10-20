@@ -13,7 +13,7 @@ final class PlannerUITests: XCTestCase {
         }
         XCTAssertEqual(timed.value as? String, "1")
         app.buttons["Save"].tap()
-        let item = app.staticTexts["UI timeline task"].firstMatch
+        let item = app.descendants(matching: .any).matching(identifier: "UI timeline task").firstMatch
         reveal(item, in: app)
         let timeline = XCTAttachment(screenshot: app.screenshot())
         timeline.name = "Restored timed task"; timeline.lifetime = .keepAlways; add(timeline)
@@ -88,9 +88,12 @@ final class PlannerUITests: XCTestCase {
         app.buttons["Add"].tap(); app.buttons["New task"].tap()
         let title = app.textFields["Task title"]; XCTAssertTrue(title.waitForExistence(timeout: 5))
         title.tap(); title.typeText("UI persistent task"); app.buttons["Save"].tap()
-        XCTAssertTrue(app.staticTexts["UI persistent task"].waitForExistence(timeout: 5))
+        // A plain native NavigationLink with one Text is exposed as a Button,
+        // while a richer label also exposes child StaticText. Check the title
+        // independently of that presentation detail before and after relaunch.
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "UI persistent task").firstMatch.waitForExistence(timeout: 5))
         app.terminate(); app.launch()
-        XCTAssertTrue(app.staticTexts["UI persistent task"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "UI persistent task").firstMatch.waitForExistence(timeout: 15))
     }
     @MainActor func testDailyFocusConvertsToPersistedTask() throws {
         let app = XCUIApplication(); home(app)
@@ -104,7 +107,7 @@ final class PlannerUITests: XCTestCase {
         let convert = app.buttons["Convert to task"]; reveal(convert, in: app); convert.tap()
         home(app)
         app.buttons["Next day"].tap()
-        let task = app.staticTexts["UI focus conversion"].firstMatch; reveal(task, in: app)
+        let task = app.descendants(matching: .any).matching(identifier: "UI focus conversion").firstMatch; reveal(task, in: app)
         XCTAssertTrue(task.exists)
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.name = "Focus converted to next-day task"; attachment.lifetime = .keepAlways; add(attachment)
     }
