@@ -115,6 +115,12 @@ struct TodayView: View {
 }
 
 private struct DayAgenda: View {
+    private struct Entry: Identifiable {
+        let id: UUID
+        let minute: Int
+        var habit: Habit? = nil
+        var task: PlannerTask? = nil
+    }
     @EnvironmentObject private var model: PlannerModel
     let day: CalendarDay
     let addTask: () -> Void
@@ -146,7 +152,8 @@ private struct DayAgenda: View {
                 .overlay {
                     if !hasTimedItems {
                         VStack(spacing: 16) {
-                            Text("Nothing planned for this day").font(.headline).foregroundStyle(Palette.muted)
+                            Text(habits.isEmpty && tasks.isEmpty ? "Nothing planned for this day" : "No timed items for this day")
+                                .font(.headline).foregroundStyle(Palette.muted)
                             Button("Add a task", systemImage: "plus", action: addTask).font(.headline)
                         }.padding(.leading, 56).padding(.horizontal, 20)
                     }
@@ -162,10 +169,13 @@ private struct DayAgenda: View {
             .sorted { ($0.configuration(on: day)?.plannedMinute ?? 0) < ($1.configuration(on: day)?.plannedMinute ?? 0) }
         let hourTasks = tasks.filter { ($0.plannedMinute ?? -60) / 60 == hour }
             .sorted { ($0.plannedMinute ?? 0) < ($1.plannedMinute ?? 0) }
+        let entries = (hourHabits.map { Entry(id: $0.id, minute: $0.configuration(on: day)?.plannedMinute ?? 0, habit: $0) }
+            + hourTasks.map { Entry(id: $0.id, minute: $0.plannedMinute ?? 0, task: $0) })
+            .sorted { $0.minute == $1.minute ? $0.id.uuidString < $1.id.uuidString : $0.minute < $1.minute }
         let isCurrent = day == CalendarDay(date: now) && Calendar.current.component(.hour, from: now) == hour
         return HStack(alignment: .top, spacing: 10) {
             VStack(spacing: 0) {
-                Text(isCurrent ? now.formatted(date: .omitted, time: .shortened) : timeLabel(hour * 60))
+                Text(isCurrent ? timeLabel(minuteOfDay(now)) : timeLabel(hour * 60))
                     .font(.caption2.weight(isCurrent ? .bold : .medium).monospacedDigit())
                     .foregroundStyle(isCurrent ? Palette.sage : Palette.muted)
                     .opacity(hour % 4 == 0 || isCurrent || !hourHabits.isEmpty || !hourTasks.isEmpty ? 1 : 0)
@@ -173,13 +183,11 @@ private struct DayAgenda: View {
             }
             VStack(spacing: 8) {
                 if isCurrent { Rectangle().fill(Palette.sage.opacity(0.6)).frame(height: 1).accessibilityHidden(true) }
-                ForEach(hourHabits) { habit in
-                    HabitRow(habit: habit, day: day).padding(12)
-                        .background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
-                }
-                ForEach(hourTasks) { task in
-                    TaskRow(task: task, day: day).padding(12)
-                        .background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
+                ForEach(entries) { entry in
+                    Group {
+                        if let habit = entry.habit { HabitRow(habit: habit, day: day) }
+                        if let task = entry.task { TaskRow(task: task, day: day) }
+                    }.padding(12).background(Palette.header, in: RoundedRectangle(cornerRadius: 16))
                 }
             }
             .frame(maxWidth: .infinity, minHeight: 36, alignment: .topLeading)
