@@ -31,9 +31,10 @@ jobs:
       - name: Choose iPhone simulator
         run: |
           python3 - <<'PY'
-          import json, subprocess, os
+          import json, subprocess, os, re
           devices=json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))['devices']
-          phones=[d for runtime, group in devices.items() if 'iOS' in runtime for d in group if 'iPhone' in d['name']]
+          runtimes=sorted((r for r in devices if 'iOS' in r), key=lambda r: tuple(int(n) for n in re.findall(r'\d+', r)), reverse=True)
+          phones=[d for runtime in runtimes for d in devices[runtime] if 'iPhone' in d['name']]
           if not phones: raise SystemExit('No available iPhone simulator')
           with open(os.environ['GITHUB_ENV'],'a') as f: f.write('SIMULATOR_ID='+phones[0]['udid']+'\n')
           PY

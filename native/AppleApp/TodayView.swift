@@ -8,6 +8,7 @@ struct TodayView: View {
     @State private var creatingHabit = false
     @State private var creatingTask = false
     @State private var journalOpen = false
+    @State private var calendarOpen = false
     private var day: CalendarDay { CalendarDay(date: selectedDate) }
     private var week: [Date] {
         var calendar = Calendar.current; calendar.firstWeekday = 2
@@ -45,8 +46,13 @@ struct TodayView: View {
             #endif
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    DatePicker("Your day", selection: $selectedDate, displayedComponents: .date)
-                        .labelsHidden().accessibilityLabel("Choose date")
+                    Button { calendarOpen = true } label: { Label("Choose date", systemImage: "calendar") }
+                        .popover(isPresented: $calendarOpen) {
+                            DatePicker("Your day", selection: $selectedDate, displayedComponents: .date)
+                                .datePickerStyle(.graphical).padding().frame(width: 320)
+                                .presentationCompactAdaptation(.popover)
+                                .onChange(of: selectedDate) { _, _ in calendarOpen = false }
+                        }
                 }
             }
             .sheet(isPresented: $creatingHabit) { HabitEditor(day: day) }
